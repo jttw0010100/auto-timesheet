@@ -10,10 +10,12 @@ class Temp():
                 'End Date': [0, 0, 0]},
                 index=['Year', 'Month', 'Day'] 
                 )
+
     def test():
         exceledit.EditExcel.replace(Temp.ddf1, 'Total Days', 0, 100)
-        exceledit.EditExcel.insert(Temp.ddf2,'tab')
-        exceledit.EditExcel.specinsert(Temp.ddf1,'tab', False, 1, 5)
-        exceledit.EditExcel.writer.save()
+        exceledit.EditExcel.insert(Temp.ddf2,'Tab')
+        exceledit.EditExcel.specinsert(Temp.ddf1,'Tab', False, 1, 5)
+        exceledit.EditExcel.insert(Temp.tdf1,'Calc')
+        exceledit.EditExcel.writer.save() 
 
 Temp.test()
