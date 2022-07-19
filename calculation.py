@@ -27,12 +27,16 @@ class Req():
             hours = hours - 1
             if t2[1] + t1[1] > 60:
                 min = t2[1] + t1[1] - 60
-                hours = hours + min * 60
+                hours = hours + min/60
             if t2[1] + t1[1] == 60:
                 hours = hours + 1
             else:
                 min = t2[1] + t1[1]
-                hours = hours + min * 60
+                hours = hours + min/60
+        if t2[1]>t1[1]:
+            min = t2[1]-t1[1]
+            hours = hours + min/60
+        print (hours)
 
     def convert(time, time2):
         dt1 = []
@@ -45,4 +49,4 @@ class Req():
         dt1[1] = int(dt1[1])
         
 
-Req.calctd([12,00],[23,00])
+Req.calctd([9,00],[4,30])
