@@ -1,3 +1,4 @@
+from calendar import month_abbr
 import datetime as dt
 from functools import total_ordering
 from lib2to3.pytree import convert
@@ -25,6 +26,7 @@ class Req():
 
     total_hours = 0
 
+    #time function
     def calcwh(start, lunchstart, lunchfinish, finish):
         start1 = Req.convert(start)
         finish1 = Req.convert(finish)
@@ -87,6 +89,21 @@ class Req():
         dt1[1] = int(dt1[1])
         return (dt1)
     
+    #date functions
+    def datecomp(year, month, day):
+        date = []
+        date[0] = int(year)
+        date[1] = int(month)
+        date[2] = int(day)
+        return date
+
+    def datediff(date1,date2):
+        d0 = dt.date(date1[0], date1[1], date1[2])
+        d1 = dt.date(date2[0], date2[1], date2[2])
+        delta = d1 - d0
+        return(delta.days)   
+
+    #time validation
     def validateh(num):
         if num > 12:
             num = num-12
@@ -97,11 +114,25 @@ class Req():
         if num > 59:
             print ("Minutes is over 59 which is invalid ")
         return num
+    
+    def validatewh(wh):
+        if wh > 126:
+            print("Raise error")
+        return wh
+
+    def validatedatediff(date1, date2):
+        if Req.datediff(date1, date2) > 59:
+            print("Raise Error")
+        return Req.datediff(date1, date2)    
+
+    def validatedate(date):
+        dt.datetime(year=date[0], month=date[1], day=date[2])
 
     def test():
 
-        Req.calcwh("9:00","1:00","2:00","6:00")
-        Req.calcwh("9:00","13:00","14:00","18:00")
-        Req.totalhours()
+        #Req.calcwh("9:00","1:00","2:00","6:00")
+        #Req.calcwh("9:00","13:00","14:00","18:00")
+        #Req.totalhours()
 
-Req.test()
+        return
+
