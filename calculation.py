@@ -113,9 +113,16 @@ class Req():
             weeks = days/7
             print(weeks)
 
-    def findday(date):
+    def dayinttostr(date):
         today = dt.datetime(date[0], date[1], date[2])
         print (today.strftime('%A'))
+
+    def findday(date, dayinweek):
+        strdate = datearrtostr(date)
+        periods = pd.date_range(start=strdate, periods=7 ,freq="1D", inclusive="both")
+        strdatearr = (numpy.array(periods))
+        for i in range(6):
+            return
 
 
     #time validation
@@ -152,3 +159,6 @@ class Req():
         return
 
 Req.test()
+
+periods = pd.date_range(start="2022-07-01", periods=7 ,freq="1D", inclusive="both")
+print (numpy.array(periods))

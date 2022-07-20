@@ -23,8 +23,7 @@ class EditExcel():
         EditExcel.specinsert(EditExcel.df2,'tab', False, 1, 5)
         EditExcel.writer.save()
 
-    def generate(date1, date2):
-        hours = 0
-        days = Req.datediff(date1, date2)
-        times = pd.date_range(start="2022-07-01", end = "2022-07-20", freq="7D", inclusive="both")
-        print (numpy.array(times))
+    def generate(startdate, enddate, dayinweek):
+        
+        periods = pd.date_range(start=startdate, end = enddate, freq="7D", inclusive="both")
+        print (numpy.array(periods))
