@@ -28,7 +28,3 @@ class EditExcel():
         days = Req.datediff(date1, date2)
         times = pd.date_range(start="2022-07-01", end = "2022-07-20", freq="7D", inclusive="both")
         print (numpy.array(times))
-"""
-today = dt.datetime(2022, 7, 21)
-print (today.strftime('%A'))
-"""

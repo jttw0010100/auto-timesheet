@@ -113,6 +113,11 @@ class Req():
             weeks = days/7
             print(weeks)
 
+    def findday(date):
+        today = dt.datetime(date[0], date[1], date[2])
+        print (today.strftime('%A'))
+
+
     #time validation
     def validateh(num):
         if num > 12:
@@ -147,6 +152,3 @@ class Req():
         return
 
 Req.test()
-
-times = pd.date_range(start="2022-07-01", end = "2022-07-20", freq="7D", normalize=True, inclusive="both")
-print (numpy.array(times))
