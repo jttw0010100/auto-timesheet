@@ -3,9 +3,11 @@ import datetime as dt
 from functools import total_ordering
 from lib2to3.pytree import convert
 from os import lseek
+import pandas as pd
 from sqlite3 import Date
 from wsgiref import validate
 from xmlrpc.client import DateTime
+import numpy
 
 #max weekly hours
 maxwh=15
@@ -102,6 +104,14 @@ class Req():
         d1 = dt.date(date2[0], date2[1], date2[2])
         delta = d1 - d0
         return(delta.days)   
+    
+    def calcweeks(days):
+        if days%7 > 0:
+            weeks = days//7 + 1
+            print(weeks)
+        if days%7 == 0:
+            weeks = days/7
+            print(weeks)
 
     #time validation
     def validateh(num):
@@ -133,6 +143,10 @@ class Req():
         #Req.calcwh("9:00","1:00","2:00","6:00")
         #Req.calcwh("9:00","13:00","14:00","18:00")
         #Req.totalhours()
-
+        Req.calcweeks(50)
         return
 
+Req.test()
+
+times = pd.date_range(start="2022-07-01", end = "2022-07-20", freq="7D", normalize=True, inclusive="both")
+print (numpy.array(times))

@@ -2,7 +2,8 @@ from operator import index
 import pandas as pd
 from openpyxl import load_workbook
 from calculation import Req
-
+import datetime as dt
+import numpy
 
 class EditExcel():
     writer = pd.ExcelWriter("test.xlsx", engine='xlsxwriter')
@@ -25,6 +26,9 @@ class EditExcel():
     def generate(date1, date2):
         hours = 0
         days = Req.datediff(date1, date2)
-        while hours < 126:
-            for i in range(days % 7):
-                for 
+        times = pd.date_range(start="2022-07-01", end = "2022-07-20", freq="7D", inclusive="both")
+        print (numpy.array(times))
+"""
+today = dt.datetime(2022, 7, 21)
+print (today.strftime('%A'))
+"""
