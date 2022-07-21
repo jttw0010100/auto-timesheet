@@ -37,7 +37,7 @@ class Req():
         temp = Req.total_hours
         Req.total_hours == 0
         #print(temp)
-        print (Req.total_hours)
+        return (Req.total_hours)
 
     def calctd(t1, t2):
         hours = 12 - t1[0] + t2[0]
@@ -87,25 +87,22 @@ class Req():
     
     #date functions
     def datecomp(year, month, day):
-        date = [0,0,0]
-        date[0] = int(year)
-        date[1] = int(month)
-        date[2] = int(day)
+        date = [year, month, day]
         return date
 
     def datediff(date1,date2):
-        d0 = dt.date(date1[0], date1[1], date1[2])
-        d1 = dt.date(date2[0], date2[1], date2[2])
+        d0 = dt.date(int(date1[0]), int(date1[1]), int(date1[2]))
+        d1 = dt.date(int(date2[0]), int(date2[1]), int(date2[2]))
         delta = d1 - d0
         return(delta.days)   
     
     def calcweeks(days):
         if days%7 > 0:
             weeks = days//7 + 1
-            print(weeks)
+            return(weeks)
         if days%7 == 0:
             weeks = days/7
-            print(weeks)
+            return(weeks)
 
     def dayinweek(date1):
         return (date1.strftime('%A'))
@@ -122,6 +119,9 @@ class Req():
     def arrtodt(date):
         return dt.datetime(date[0], date[1], date[2])
 
+    def arrtostr(date):
+        return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]),"%Y-%m-%d")
+        
     def dttostr(datetime):
         return dt.datetime.strftime(datetime, "%Y-%m-%d")
 
@@ -139,13 +139,14 @@ class Req():
         return(time1)
 
     def generate(startdate, enddate):
+        enddate = Req.arrtostr(enddate)
         periods = pd.date_range(start=startdate, end = enddate, freq="7D", inclusive="both")
         periods2 = numpy.array(periods)
         times=[]
         for i in range(len(periods2)):
             period = str(periods[i])
             times.append(period.split("T"))
-        print (times[0])
+        return (times)
 
     #time validation
     def validatehour(num):
@@ -173,7 +174,6 @@ class Req():
         return th
 
     def validatedatediff(date1, date2):
-        print (Req.datediff(date1, date2))
         if Req.datediff(date1, date2) > 59:
             sg.Popup('Oops!', 'Date range of ' + str(59) + ' exceeded')
             quit()
@@ -188,10 +188,11 @@ class Req():
         #Req.calcwh("9:00","13:00","14:00","18:00")
         #Req.totalhours()
         #Req.calcweeks(50)
-        Req.validatedatediff([2022,1,1],[2022,12,20])
+        #Req.validatedatediff([2022,1,1],[2022,12,20])
         #Req.datetimearrtostr([2022,7,21],"13:30")
         #Req.datearrtostr([2022,7,21])
         #Req.generate(Req.findday([2022,7,21],"Sun"), "2022-8-20")
+        #Req.datecomp(2022,2,24)
         return
 
 Req.test()
