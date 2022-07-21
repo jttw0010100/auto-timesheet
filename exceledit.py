@@ -4,6 +4,9 @@ from openpyxl import load_workbook
 from calculation import Req
 import datetime as dt
 import numpy
+import PySimpleGUI as sg
+import socket
+
 
 class EditExcel():
     writer = pd.ExcelWriter("test.xlsx", engine='xlsxwriter')
@@ -23,4 +26,3 @@ class EditExcel():
         EditExcel.specinsert(EditExcel.df2,'tab', False, 1, 5)
         EditExcel.writer.save()
 
-    

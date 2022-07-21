@@ -9,15 +9,8 @@ from sqlite3 import Date
 from wsgiref import validate
 from xmlrpc.client import DateTime
 import numpy
-
-#max weekly hours
-maxwh=15
-#max total hours
-maxth=126
-#max date range
-maxdr = 59
-
-total_hours = 0
+import PySimpleGUI as sg
+import socket
 
 class Req():
     #max weekly hours
@@ -157,27 +150,33 @@ class Req():
     #time validation
     def validatehour(num):
         if num > 23:
-            return "Error"
+            sg.Popup('Oops!', str(num) + ' is not a valid time')
+            quit()
         return num
 
     def validateminutes(num):
         if num > 59:
-            print ("Minutes is over 59 which is invalid ")
+            sg.Popup('Oops!', str(num) + ' is not a valid time')
+            quit()
         return num
     
     def validateweeklyhours(wh):
         if wh > maxwh:
-            print("Raise Error")
+            sg.Popup('Oops!', 'Maximum of ' + str(59) + ' total hours exceeded')
+            quit()
         return wh
 
     def validateworkinghours(th):
         if th > maxth:
-            print("Raise error")
+            sg.Popup('Oops!', 'Maximum of ' + str(59) + ' working hours exceeded')
+            quit()
         return th
 
     def validatedatediff(date1, date2):
-        if Req.datediff(date1, date2) > maxdr:
-            print("Raise Error")
+        print (Req.datediff(date1, date2))
+        if Req.datediff(date1, date2) > 59:
+            sg.Popup('Oops!', 'Date range of ' + str(59) + ' exceeded')
+            quit()
         return Req.datediff(date1, date2)    
 
     def validatedate(date):
@@ -189,7 +188,10 @@ class Req():
         #Req.calcwh("9:00","13:00","14:00","18:00")
         #Req.totalhours()
         #Req.calcweeks(50)
+        Req.validatedatediff([2022,1,1],[2022,12,20])
         #Req.datetimearrtostr([2022,7,21],"13:30")
         #Req.datearrtostr([2022,7,21])
-        Req.generate(Req.findday([2022,7,21],"Sun"), "2022-8-20")
+        #Req.generate(Req.findday([2022,7,21],"Sun"), "2022-8-20")
         return
+
+Req.test()
