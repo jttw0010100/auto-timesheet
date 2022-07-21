@@ -114,16 +114,23 @@ class Req():
             weeks = days/7
             print(weeks)
 
-    def dayinweek(date):
-        return Req.datearrtostr(date).strftime('%A')
+    def dayinweek(date1):
+        return (date1.strftime('%A'))
+
+    def sdayinweek(date1):
+        return (date1.strftime('%a'))
 
     def findday(date, day):
-        strdate = Req.datearrtostr(date)
-        periods = pd.date_range(start=strdate, periods=7 ,freq="1D", inclusive="both")
-        strdatearr = (numpy.array(periods))
-        for i in range(len(strdatearr)):
-            if Req.dayinweek(strdatearr[i]) == day: 
-                print (strdatearr[i])
+        strdate = Req.arrtodt(date)
+        for i in range(0,6):
+            if Req.dayinweek(strdate+dt.timedelta(days=i)) == day or Req.sdayinweek(strdate+dt.timedelta(days=i)) == day : 
+                return (Req.dttostr(strdate+dt.timedelta(days=i)))
+
+    def arrtodt(date):
+        return dt.datetime(date[0], date[1], date[2])
+
+    def dttostr(datetime):
+        return dt.datetime.strftime(datetime, "%Y-%m-%d")
 
     def datearrtostr(date):
         return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]), "%Y-%m-%d")
@@ -137,6 +144,15 @@ class Req():
         time1[0] = int(time1[0])
         time1[1] = int(time1[1])
         return(time1)
+
+    def generate(startdate, enddate):
+        periods = pd.date_range(start=startdate, end = enddate, freq="7D", inclusive="both")
+        periods2 = numpy.array(periods)
+        times=[]
+        for i in range(len(periods2)):
+            period = str(periods[i])
+            times.append(period.split("T"))
+        return (times)
 
     #time validation
     def validateh(num):
@@ -169,8 +185,8 @@ class Req():
         #Req.totalhours()
         #Req.calcweeks(50)
         #Req.datetimearrtostr([2022,7,21],"13:30")
-        #Req.findday([2022,7,21],"Friday")
-        Req.datetimearrtostr([2022,7,21],"13:30")
+        #Req.datearrtostr([2022,7,21])
+        #Req.generate(Req.findday([2022,7,21],"Sun"), "2022-8-20")
         return
 
 Req.test()

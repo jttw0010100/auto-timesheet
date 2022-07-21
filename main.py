@@ -2,6 +2,7 @@ import exceledit
 import pandas as pd
 import datetime as dt
 import numpy
+from calculation import Req
 
 
 class Temp():
@@ -18,7 +19,6 @@ class Temp():
         exceledit.EditExcel.replace(Temp.ddf1, 'Total Days', 0, 100)
         exceledit.EditExcel.insert(Temp.ddf2,'Tab')
         exceledit.EditExcel.specinsert(Temp.ddf1,'Tab', False, 1, 5)
-        exceledit.EditExcel.insert(Temp.tdf1,'Calc')
         exceledit.EditExcel.writer.save() 
 
 Temp.test()
