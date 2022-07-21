@@ -86,15 +86,15 @@ class Req():
         dt1 = time.split(':')
         dt1[0] = int(dt1[0])
         dt1[1] = int(dt1[1])
-        dt1[0] = Req.validateh(dt1[0])
-        Req.validatem(dt1[1])
+        dt1[0] = Req.validatehour(dt1[0])
+        Req.validateminutes(dt1[1])
         dt1[0] = int(dt1[0])
         dt1[1] = int(dt1[1])
         return (dt1)
     
     #date functions
     def datecomp(year, month, day):
-        date = []
+        date = [0,0,0]
         date[0] = int(year)
         date[1] = int(month)
         date[2] = int(day)
@@ -152,26 +152,31 @@ class Req():
         for i in range(len(periods2)):
             period = str(periods[i])
             times.append(period.split("T"))
-        return (times)
+        print (times[0])
 
     #time validation
-    def validateh(num):
+    def validatehour(num):
         if num > 23:
             return "Error"
         return num
 
-    def validatem(num):
+    def validateminutes(num):
         if num > 59:
             print ("Minutes is over 59 which is invalid ")
         return num
     
-    def validatewh(wh):
-        if wh > 126:
-            print("Raise error")
+    def validateweeklyhours(wh):
+        if wh > maxwh:
+            print("Raise Error")
         return wh
 
+    def validateworkinghours(th):
+        if th > maxth:
+            print("Raise error")
+        return th
+
     def validatedatediff(date1, date2):
-        if Req.datediff(date1, date2) > 59:
+        if Req.datediff(date1, date2) > maxdr:
             print("Raise Error")
         return Req.datediff(date1, date2)    
 
@@ -186,7 +191,5 @@ class Req():
         #Req.calcweeks(50)
         #Req.datetimearrtostr([2022,7,21],"13:30")
         #Req.datearrtostr([2022,7,21])
-        #Req.generate(Req.findday([2022,7,21],"Sun"), "2022-8-20")
+        Req.generate(Req.findday([2022,7,21],"Sun"), "2022-8-20")
         return
-
-Req.test()

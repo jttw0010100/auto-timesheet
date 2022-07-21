@@ -20,5 +20,3 @@ class Temp():
         exceledit.EditExcel.insert(Temp.ddf2,'Tab')
         exceledit.EditExcel.specinsert(Temp.ddf1,'Tab', False, 1, 5)
         exceledit.EditExcel.writer.save() 
-
-Temp.test()
