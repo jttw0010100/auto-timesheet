@@ -3,6 +3,7 @@ import datetime as dt
 from functools import total_ordering
 from lib2to3.pytree import convert
 from os import lseek
+from time import time_ns
 import pandas as pd
 from sqlite3 import Date
 from wsgiref import validate
@@ -113,23 +114,34 @@ class Req():
             weeks = days/7
             print(weeks)
 
-    def dayinttostr(date):
-        today = dt.datetime(date[0], date[1], date[2])
-        print (today.strftime('%A'))
+    def dayinweek(date):
+        return Req.datearrtostr(date).strftime('%A')
 
-    def findday(date, dayinweek):
-        strdate = datearrtostr(date)
+    def findday(date, day):
+        strdate = Req.datearrtostr(date)
         periods = pd.date_range(start=strdate, periods=7 ,freq="1D", inclusive="both")
         strdatearr = (numpy.array(periods))
-        for i in range(6):
-            return
+        for i in range(len(strdatearr)):
+            if Req.dayinweek(strdatearr[i]) == day: 
+                print (strdatearr[i])
 
+    def datearrtostr(date):
+        return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]), "%Y-%m-%d")
+
+    def datetimearrtostr(date, time):
+        time1 = Req.splittime(time)
+        return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2], time1[0], time1[1]), "%Y-%m-%d %H:%M")
+
+    def splittime(time):
+        time1 = time.split(":")
+        time1[0] = int(time1[0])
+        time1[1] = int(time1[1])
+        return(time1)
 
     #time validation
     def validateh(num):
-        if num > 12:
-            num = num-12
-            return num
+        if num > 23:
+            return "Error"
         return num
 
     def validatem(num):
@@ -155,10 +167,10 @@ class Req():
         #Req.calcwh("9:00","1:00","2:00","6:00")
         #Req.calcwh("9:00","13:00","14:00","18:00")
         #Req.totalhours()
-        Req.calcweeks(50)
+        #Req.calcweeks(50)
+        #Req.datetimearrtostr([2022,7,21],"13:30")
+        #Req.findday([2022,7,21],"Friday")
+        Req.datetimearrtostr([2022,7,21],"13:30")
         return
 
 Req.test()
-
-periods = pd.date_range(start="2022-07-01", periods=7 ,freq="1D", inclusive="both")
-print (numpy.array(periods))
