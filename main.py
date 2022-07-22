@@ -17,6 +17,8 @@ class Temp():
     genlunch1 = Req.generate(Req.findday(lunchstart,"Sun"), enddate)
     genlunch2 = Req.generate(Req.findday(lunchend,"Sun"), enddate)
     genend = Req.generate(Req.findday(endtime,"Sun"), enddate)
+    numofdates = len(genstart) + len(genlunch1) + len(genlunch2) + len(genend)
+    dates = []
 
     ddf1 = pd.DataFrame({
                 'Total Days': [Req.datediff(starttime, endtime)],
@@ -30,6 +32,15 @@ class Temp():
     gd = pd.DataFrame({'Time': [genstart[0], genlunch1[0], genlunch2[0], genend[0]]},
                 index = ['Office Start', 'Lunch Start', 'Lunch End', 'Office End']
                 )
+    
+    
+    #for x in range(0, numofdates):
+        #dates.append(genstart[x])
+        #dates.append(genlunch1[x])
+        #dates.append(genlunch2[x])
+        #dates.append(genend[x])
+    print(dates)
+    
 
     def main():
         exceledit.EditExcel.replace(Temp.ddf1, 'Total Days', 0, 100)
@@ -37,5 +48,7 @@ class Temp():
         exceledit.EditExcel.specinsert(Temp.ddf1,'Tab', False, 1, 5)
         exceledit.EditExcel.specinsert(Temp.gd,'Tab', True, 4, 0)
         exceledit.EditExcel.writer.save() 
+        #Temp.comp_gendates(Temp.genstart, Temp.genlunch1, Temp.genlunch2, Temp.genend)
+ 
 
 Temp.main()

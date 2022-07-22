@@ -150,10 +150,13 @@ class Req():
         periods2 = numpy.array(periods)
         times=[]
         for i in range(len(periods2)):
-            period = str(periods[i])
-            times.append(period.split("T"))
+            period = str(periods[0])
+            times.append(period)
         return (times)
+        
     
+    #txt = "2022-07-03T13:00:00.000000000"
+    #print (txt.split("T"))
 
     #time validation
     def validatehour(num):
@@ -198,7 +201,7 @@ class Req():
         #Req.validatedatediff([2022,1,1],[2022,12,20])
         #Req.datetimelisttostr([2022,7,21],"13:30")
         #Req.datelisttostr([2022,7,21])
-        #Req.generate(Req.findday([2022,7,21],"Sun"), "2022-8-20")
+        Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20])
         #Req.datecomp(2022,2,24)
         return
 
