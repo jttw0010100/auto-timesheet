@@ -7,30 +7,35 @@ from calculation import Req
 
 
 class Temp():
-    start = ReadExcel.find_start()
-    end = ReadExcel.find_end()
+    startdate = ReadExcel.find_start()
+    enddate = ReadExcel.find_end()
     starttime = Req.addtimetodate(ReadExcel.find_start(), 9,0)
-    endtime = Req.addtimetodate(ReadExcel.find_end(),9,0)
-    gend1 = Req.generate(Req.findday(starttime,"Sun"), endtime)
+    lunchstart = Req.addtimetodate(ReadExcel.find_start(), 13,0)
+    lunchend = Req.addtimetodate(ReadExcel.find_start(), 14,0)
+    endtime = Req.addtimetodate(ReadExcel.find_start(),18,0)
+    genstart = Req.generate(Req.findday(starttime,"Sun"), enddate)
+    genlunch1 = Req.generate(Req.findday(lunchstart,"Sun"), enddate)
+    genlunch2 = Req.generate(Req.findday(lunchend,"Sun"), enddate)
+    genend = Req.generate(Req.findday(endtime,"Sun"), enddate)
+
     ddf1 = pd.DataFrame({
                 'Total Days': [Req.datediff(starttime, endtime)],
                 'Total Hours': [0]}
                 )
-    ddf2 = pd.DataFrame({'Start Date': [start[0], start[1], start[2]], 
-                'End Date': [end[0], end[1], end[2]]},
+    ddf2 = pd.DataFrame({'Start Date': [startdate[0], startdate[1], startdate[2]], 
+                'End Date': [enddate[0], enddate[1], enddate[2]]},
                 index=['Year', 'Month', 'Day'] 
                 )
     
-    gd = pd.DataFrame({'Datetime': [gend1[0], gend1[1], gend1[2]], 
-                'Day': [1, 2, 3],
-                'Working Hours': [8, 7, 8]},
+    gd = pd.DataFrame({'Time': [genstart[0], genlunch1[0], genlunch2[0], genend[0]]},
+                index = ['Office Start', 'Lunch Start', 'Lunch End', 'Office End']
                 )
 
-    def test():
+    def main():
         exceledit.EditExcel.replace(Temp.ddf1, 'Total Days', 0, 100)
         exceledit.EditExcel.insert(Temp.ddf2,'Tab')
         exceledit.EditExcel.specinsert(Temp.ddf1,'Tab', False, 1, 5)
-        exceledit.EditExcel.specinsert(Temp.gd,'Tab', False, 4, 0)
+        exceledit.EditExcel.specinsert(Temp.gd,'Tab', True, 4, 0)
         exceledit.EditExcel.writer.save() 
 
-Temp.test()
+Temp.main()

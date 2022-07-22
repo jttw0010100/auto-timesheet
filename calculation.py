@@ -145,6 +145,7 @@ class Req():
         return(time1)
 
     def generate(startdate, enddate):
+        enddate = Req.listtodt(enddate)
         periods = pd.date_range(start=startdate, end = enddate, freq="7D", inclusive="both")
         periods2 = numpy.array(periods)
         times=[]
