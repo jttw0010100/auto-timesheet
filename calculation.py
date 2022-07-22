@@ -137,6 +137,11 @@ class Req():
     
     def addtimetodate(date, hour, minute):
         return dt.date.strftime(dt.datetime(date[0], date[1], date[2], hour, minute), "%Y-%m-%d %H:%M")
+    
+    def gethourminute(time):
+        txt = time
+        txts = txt.split(" ")
+        return txts[1]
 
     def splittime(time):
         time1 = time.split(":")
