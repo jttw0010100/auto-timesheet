@@ -144,9 +144,9 @@ class Req():
         time1[1] = int(time1[1])
         return(time1)
 
-    def generate(startdate, enddate):
+    def generate(startdate, enddate, frequency):
         enddate = Req.listtodt(enddate)
-        periods = pd.date_range(start=startdate, end = enddate, freq="7D", inclusive="both")
+        periods = pd.date_range(start=startdate, end = enddate, freq=frequency, inclusive="both")
         periods2 = numpy.array(periods)
         times=[]
         for i in range(len(periods2)):
@@ -201,7 +201,7 @@ class Req():
         #Req.validatedatediff([2022,1,1],[2022,12,20])
         #Req.datetimelisttostr([2022,7,21],"13:30")
         #Req.datelisttostr([2022,7,21])
-        Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20])
+        Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20], "7D")
         #Req.datecomp(2022,2,24)
         return
 

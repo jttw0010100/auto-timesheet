@@ -21,7 +21,6 @@ class EditExcel():
         dataframe[col] = dataframe[col].replace([old],[val])
 
     def test():
-        EditExcel.replace(EditExcel.df2, 'Total Days', 0, 100)
         EditExcel.insert(EditExcel.df3,'tab')
         EditExcel.specinsert(EditExcel.df2,'tab', False, 1, 5)
         EditExcel.writer.save()
