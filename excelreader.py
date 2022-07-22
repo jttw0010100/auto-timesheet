@@ -15,9 +15,9 @@ class ReadExcel():
         sheet = wb.sheet_by_index(sheetnum)
         return sheet.cell_value(row, column)
 
-    def compile_dates(sheetnum, yearrow, monthrow, dayrow):
+    def compile_dates(sheetnum, yelistow, monthrow, dayrow):
         sheet = wb.sheet_by_index(sheetnum)
-        year = sheet.cell_value(yearrow, 1)
+        year = sheet.cell_value(yelistow, 1)
         month = sheet.cell_value(monthrow, 1)
         day =  sheet.cell_value(dayrow, 1)
         return Req.datecomp(int(year), int(month), int(day))

@@ -91,8 +91,8 @@ class Req():
         return date
 
     def datediff(date1,date2):
-        d0 = dt.date(int(date1[0]), int(date1[1]), int(date1[2]))
-        d1 = dt.date(int(date2[0]), int(date2[1]), int(date2[2]))
+        d0 = Req.strtodt(date1)
+        d1 = Req.strtodt(date2)
         delta = d1 - d0
         return(delta.days)   
     
@@ -111,26 +111,32 @@ class Req():
         return (date1.strftime('%a'))
 
     def findday(date, day):
-        strdate = Req.arrtodt(date)
+        strdate = Req.strtodt(date)
         for i in range(0,6):
             if Req.dayinweek(strdate+dt.timedelta(days=i)) == day or Req.sdayinweek(strdate+dt.timedelta(days=i)) == day : 
                 return (Req.dttostr(strdate+dt.timedelta(days=i)))
 
-    def arrtodt(date):
-        return dt.datetime(date[0], date[1], date[2])
+    def listtodt(date):
+        return dt.datetime(int(date[0]), int(date[1]), int(date[2]))
 
-    def arrtostr(date):
+    def listtostr(date):
         return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]),"%Y-%m-%d")
-        
-    def dttostr(datetime):
-        return dt.datetime.strftime(datetime, "%Y-%m-%d")
 
-    def datearrtostr(date):
+    def strtodt(date):
+        return dt.datetime.strptime(date, "%Y-%m-%d %H:%M")    
+    
+    def dttostr(datetime):
+        return dt.datetime.strftime(datetime, "%Y-%m-%d  %H:%M")
+
+    def datelisttostr(date):
         return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]), "%Y-%m-%d")
 
-    def datetimearrtostr(date, time):
+    def datetimelisttostr(date, time):
         time1 = Req.splittime(time)
         return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2], time1[0], time1[1]), "%Y-%m-%d %H:%M")
+    
+    def addtimetodate(date, hour, minute):
+        return dt.date.strftime(dt.datetime(date[0], date[1], date[2], hour, minute), "%Y-%m-%d %H:%M")
 
     def splittime(time):
         time1 = time.split(":")
@@ -139,7 +145,6 @@ class Req():
         return(time1)
 
     def generate(startdate, enddate):
-        enddate = Req.arrtostr(enddate)
         periods = pd.date_range(start=startdate, end = enddate, freq="7D", inclusive="both")
         periods2 = numpy.array(periods)
         times=[]
@@ -147,6 +152,7 @@ class Req():
             period = str(periods[i])
             times.append(period.split("T"))
         return (times)
+    
 
     #time validation
     def validatehour(num):
@@ -189,8 +195,8 @@ class Req():
         #Req.totalhours()
         #Req.calcweeks(50)
         #Req.validatedatediff([2022,1,1],[2022,12,20])
-        #Req.datetimearrtostr([2022,7,21],"13:30")
-        #Req.datearrtostr([2022,7,21])
+        #Req.datetimelisttostr([2022,7,21],"13:30")
+        #Req.datelisttostr([2022,7,21])
         #Req.generate(Req.findday([2022,7,21],"Sun"), "2022-8-20")
         #Req.datecomp(2022,2,24)
         return
