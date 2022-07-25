@@ -1,3 +1,4 @@
+from calendar import day_abbr
 import pandas as pd
 import openpyxl
 import xlrd
@@ -27,13 +28,13 @@ class ReadExcel():
     def find_end():
         return ReadExcel.compile_dates(0, 6, 7, 8)
     
-    def total_hour_limit():
+    def total_work_hours_limit():
         return ReadExcel.get_value(0, 11, 1)
 
     def total_date_range_limit():
         return ReadExcel.get_value(0, 12, 1)
 
-    def total_work_hour_limit():
+    def total_weekly_hour_limit():
         return ReadExcel.get_value(0, 13, 1)
 
     def office_start():
@@ -47,4 +48,10 @@ class ReadExcel():
     
     def office_end():
         return ReadExcel.get_value(0, 17, 1)
+
+    def dayofweek1():
+        return str(ReadExcel.get_value(0, 20, 1))
+    
+    def dayofweek2():
+        return str(ReadExcel.get_value(0, 21, 1))
 

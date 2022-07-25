@@ -1,4 +1,5 @@
 from calendar import month_abbr
+from csv import reader
 import datetime as dt
 from functools import total_ordering
 from lib2to3.pytree import convert
@@ -11,6 +12,8 @@ from xmlrpc.client import DateTime
 import numpy
 import PySimpleGUI as sg
 import socket
+
+from excelreader import ReadExcel
 
 class Req():
     #max weekly hours
@@ -100,6 +103,11 @@ class Req():
         t1 = dt.datetime.strptime(time1,"%Y-%m-%d %H:%M:%S")
         t2 = dt.datetime.strptime(time2,"%Y-%m-%d %H:%M:%S")
         delta = t2 - t1
+        """
+        print (t1)
+        print (t2)
+        print(delta)
+        """
         return (int(delta.total_seconds()/60/60))
 
     def calcweeks(days):
@@ -118,7 +126,12 @@ class Req():
 
     def findday(date, day):
         strdate = Req.strtodt(date)
-        for i in range(0,6):
+
+        #enable below if statement if startdate does not include first workday
+        #if Req.dayinweek(strdate) == day or Req.sdayinweek(strdate) == day : 
+            #return (Req.dttostr(strdate+dt.timedelta(days=7)))
+
+        for i in range(0,7):
             if Req.dayinweek(strdate+dt.timedelta(days=i)) == day or Req.sdayinweek(strdate+dt.timedelta(days=i)) == day : 
                 return (Req.dttostr(strdate+dt.timedelta(days=i)))
 
@@ -191,19 +204,19 @@ class Req():
         return num
     
     def validateweeklyhours(wh):
-        if wh > maxwh:
-            sg.Popup('Oops!', 'Maximum of ' + str(59) + ' total hours exceeded')
+        if wh > ReadExcel.total_weekly_hour_limit:
+            sg.Popup('Oops!', 'Maximum of ' + str(ReadExcel.total_weekly_hour_limit) + ' total hours exceeded')
             quit()
         return wh
 
     def validateworkinghours(th):
-        if th > maxth:
+        if th > ReadExcel.total_work_hours_limit:
             sg.Popup('Oops!', 'Maximum of ' + str(59) + ' working hours exceeded')
             quit()
         return th
 
     def validatedatediff(date1, date2):
-        if Req.datediff(date1, date2) > 59:
+        if Req.datediff(date1, date2) > ReadExcel.total_date_range_limit:
             sg.Popup('Oops!', 'Date range of ' + str(59) + ' exceeded')
             quit()
         return Req.datediff(date1, date2)    
