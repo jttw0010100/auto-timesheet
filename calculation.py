@@ -96,6 +96,12 @@ class Req():
         delta = d1 - d0
         return(delta.days)   
     
+    def find_workinghours(time1, time2):
+        t1 = dt.datetime.strptime(time1,"%Y-%m-%d %H:%M:%S")
+        t2 = dt.datetime.strptime(time2,"%Y-%m-%d %H:%M:%S")
+        delta = t2 - t1
+        return (int(delta.total_seconds()/60/60))
+
     def calcweeks(days):
         if days%7 > 0:
             weeks = days//7 + 1
@@ -127,6 +133,9 @@ class Req():
     
     def dttostr(datetime):
         return dt.datetime.strftime(datetime, "%Y-%m-%d  %H:%M")
+    
+    def strdatetodt(date):
+        return dt.datetime.strptime(date, "%Y-%m-%d")    
 
     def datelisttostr(date):
         return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]), "%Y-%m-%d")
@@ -143,6 +152,11 @@ class Req():
         txts = txt.split(" ")
         return txts[1]
 
+    def getdate(time):
+        txt = time
+        txts = txt.split(" ")
+        return txts[0]
+
     def splittime(time):
         time1 = time.split(":")
         time1[0] = int(time1[0])
@@ -155,9 +169,9 @@ class Req():
         periods2 = numpy.array(periods)
         times=[]
         for i in range(len(periods2)):
-            period = str(periods[0])
+            period = str(periods[i])
             times.append(period)
-        return (times)
+        return times
         
     
     #txt = "2022-07-03T13:00:00.000000000"
