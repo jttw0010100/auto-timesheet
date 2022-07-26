@@ -8,7 +8,7 @@ import socket
 
 
 class EditExcel():
-    writer = pd.ExcelWriter("test.xlsx", engine='xlsxwriter')
+    writer = pd.ExcelWriter("result.xlsx", engine='xlsxwriter')
 
     def insert(dataframe,tab_name):
         dataframe.to_excel(EditExcel.writer, sheet_name=tab_name)

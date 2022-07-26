@@ -14,15 +14,9 @@ import PySimpleGUI as sg
 import socket
 from see_excel import ReadExcel
 
-class Req():
-    #max weekly hours
-    maxwh=15
-    #max total hours
-    maxth=126
-    #max date range
-    maxdr = 59
+class Req():    
+    Statutory_Holidays = ['2022-01-01','2022-02-01','2022-02-02','2022-02-03','2022-04-05','2022-05-01','2022-05-08','2022-06-03','2022-07-01','2022-09-12','2022-10-01','2022-10-04','2022-12-22','2022-12-25'] 
 
-    total_hours = 0
 
     #time function
     def calcwh(start, lunchstart, lunchfinish, finish):
@@ -88,7 +82,7 @@ class Req():
         return (dt1)
     
     #date functions
-    def datecomp(year, month, day):
+    def datecomp2(year, month, day):
         date = [year, month, day]
         return date
 
@@ -153,7 +147,7 @@ class Req():
         return dt.datetime.strftime(datetime, "%Y-%m-%d  %H:%M")
     
     def strdatetodt(date):
-        return dt.datetime.strptime(date, "%Y-%m-%d")    
+        return dt.datetime.strptime(date,"%Y-%m-%d")    
 
     def datelisttostr(date):
         return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]), "%Y-%m-%d")
@@ -190,10 +184,18 @@ class Req():
             period = str(periods[i])
             times.append(period)
         return times
-        
     
-    #txt = "2022-07-03T13:00:00.000000000"
-    #print (txt.split("T"))
+    def generate2(startdate, enddate, frequency):
+        enddate = Req.listtodt(enddate)
+        periods = pd.date_range(start=startdate, end = enddate, freq=frequency, inclusive="both")
+        periods2 = numpy.array(periods)
+        times=[]
+        for i in range(len(periods2)):
+            period = str(periods[i])
+            periods3 = period.split(" ")
+            times.append(periods3[0])
+        return times
+
 
     #time validation
     def validatehour(num):
@@ -231,16 +233,7 @@ class Req():
         dt.datetime(year=date[0], month=date[1], day=date[2])
 
     def test():
-
-        #Req.calcwh("9:00","1:00","2:00","6:00")
-        #Req.calcwh("9:00","13:00","14:00","18:00")
-        #Req.totalhours()
-        #Req.calcweeks(50)
-        #Req.validatedatediff([2022,1,1],[2022,12,20])
-        #Req.datetimelisttostr([2022,7,21],"13:30")
-        #Req.datelisttostr([2022,7,21])
-        Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20], "7D")
-        #Req.datecomp(2022,2,24)
+        #Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20], "7D")
         return
 
 Req.test()

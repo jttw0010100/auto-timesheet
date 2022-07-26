@@ -36,26 +36,26 @@ class ReadExcel():
         return ReadExcel.get_value(0, 11, 1)
 
     def total_date_range_limit():
-        return ReadExcel.get_value(0, 12, 1)
-
-    def total_weekly_hour_limit():
         return ReadExcel.get_value(0, 13, 1)
 
-    def office_start():
+    def total_weekly_hour_limit():
         return ReadExcel.get_value(0, 14, 1)
 
-    def lunch_start():
+    def office_start():
         return ReadExcel.get_value(0, 15, 1)
 
-    def lunch_end():
+    def lunch_start():
         return ReadExcel.get_value(0, 16, 1)
+
+    def lunch_end():
+        return ReadExcel.get_value(0, 17, 1)
     
     def office_end():
-        return ReadExcel.get_value(0, 17, 1)
+        return ReadExcel.get_value(0, 18, 1)
 
     def dayofweek1():
-        return str(ReadExcel.get_value(0, 20, 1))
+        return str(ReadExcel.get_value(0, 21, 1))
     
     def dayofweek2():
-        return str(ReadExcel.get_value(0, 21, 1))
+        return str(ReadExcel.get_value(0, 22, 1))
 

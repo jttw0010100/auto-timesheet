@@ -4,15 +4,51 @@ import datetime as dt
 import numpy
 from see_excel import ReadExcel
 from calculation import Req
+import PySimpleGUI as sg
+import socket
 import glob
 
 class Temp():
-
+    
+    Statutory_Holidays = ['2022-01-01','2022-02-01','2022-02-02','2022-02-03','2022-04-05','2022-05-01','2022-05-08','2022-06-03','2022-07-01','2022-09-12','2022-10-01','2022-10-04','2022-12-22','2022-12-25'] 
+    Days_in_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     startdate = ReadExcel.find_start()
     enddate = ReadExcel.find_end()
-    
+    days = []
+    days = Req.generate2(Req.datelisttostr(startdate), enddate, "1D")
+
     dayofweek1 = ReadExcel.dayofweek1()
     dayofweek2 = ReadExcel.dayofweek2()
+
+    blacklist = []
+
+    invalid = 0
+    for day in days:
+        for holiday in Statutory_Holidays:
+            if day == holiday:
+                invalid = True
+                dayofweek = Req.dayinweek(Req.strdatetodt(day))
+                if (dayofweek in Days_in_week):
+                    Days_in_week.remove(dayofweek)
+                    blacklist.append(dayofweek)
+                if dayofweek1 == dayofweek or dayofweek2 == dayofweek:
+                    invalid = invalid + 1
+    
+    if len(blacklist)>0:
+        if dayofweek1 != blacklist[0] and dayofweek2 != blacklist[0]:
+            if len(blacklist)>1:
+                if dayofweek1 != blacklist[1] and dayofweek2 != blacklist[1]:
+                    invalid = 0
+            if len(blacklist)<=1:
+                invalid = 0
+    
+    if invalid > 0:
+        sg.Popup('The days in week you have chosen land on a public holiday. Please choose days from this list:', Days_in_week)
+        quit()
+
+
+    if dayofweek1 == "Saturday" or dayofweek2 == "Saturday":
+        sg.Popup('Are you sure you want to work on Saturday? If so ignore this popup')
 
 
     #day 1 
@@ -48,15 +84,6 @@ class Temp():
     dates = []
     working_hours = []
     temp = []
-
-    ddf1 = pd.DataFrame({
-                'Total Days': [Req.datediff(starttime, endtime)],
-                'Total Hours': [0]}
-                )
-    ddf2 = pd.DataFrame({'Start Date': [startdate[0], startdate[1], startdate[2]], 
-                'End Date': [enddate[0], enddate[1], enddate[2]]},
-                index=['Year', 'Month', 'Day'] 
-                )
     
     gd = pd.DataFrame(
                 columns = ['Date','Day','Office Start', 'Lunch Start', 'Lunch End', 'Office End','Working Hours']
@@ -65,7 +92,9 @@ class Temp():
     gd2 = pd.DataFrame(
         columns = ['Weeks', 'Date Range', 'Total Working Hours']
         )
-    
+    #enddate - startdate/7 * 15
+    #'FEO limit hours'
+
     #compile dates(not needed)
     #for x in range(int(numofdates/4)):
         #dates.append(genstart3[x])
@@ -90,13 +119,6 @@ class Temp():
     
 
     def main():
-        #exceledit.EditExcel.replace(Temp.ddf1, 'Total Days', 0, 100)
-        #exceledit.EditExcel.insert(Temp.ddf2,'Tab')
-        #exceledit.EditExcel.specinsert(Temp.ddf1,'Tab', False, 1, 5)
-        #for x in range(len(Temp.dates)):
-            #Temp.gd2.loc[len(Temp.gd2)] = Temp.dates[x]
-        #exceledit.EditExcel.specinsert(Temp.gd2,'Tab', False, 5, 0)
-        #print (Temp.genstart1d1)
 
         for x in range(len(Temp.genstart1d1) - 1):
             Temp.compile(x, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1)
@@ -123,19 +145,16 @@ class Temp():
         if Req.validatedatediff(Req.listdatediff(Temp.startdate, Temp.enddate)) == False:
             quit()
 
-
-        datediff = Req.listdatediff(Temp.startdate, Temp.enddate)
-        
+        datediff = Req.listdatediff(Temp.startdate, Temp.enddate)  
         weeks = Req.calcweeks(int(datediff))
 
-
         for x in range(0, len(Temp.dates)):
-            Temp.gd.loc[len(Temp.gd)] = Temp.dates[x]
+            Temp.gd.loc[len(Temp.gd)] = Temp.dates[x]       
 
         gd2data = [weeks, datediff, tally]
         
         Temp.gd2.loc[len(Temp.gd2)] = gd2data
-        exceledit.EditExcel.specinsert(Temp.gd2,'Tab', False, 0, 14)
+        exceledit.EditExcel.specinsert(Temp.gd2,'Tab', False, 8, 0)
         exceledit.EditExcel.specinsert(Temp.gd,'Tab', False, 0, 0)
         exceledit.EditExcel.writer.save() 
         #Temp.comp_gendates(Temp.genstart, Temp.genlunch1, Temp.genlunch2, Temp.genend)
