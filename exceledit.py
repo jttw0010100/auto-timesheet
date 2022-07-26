@@ -1,7 +1,6 @@
 from operator import index
 import pandas as pd
 from openpyxl import load_workbook
-from calculation import Req
 import datetime as dt
 import numpy
 import PySimpleGUI as sg

@@ -12,8 +12,7 @@ from xmlrpc.client import DateTime
 import numpy
 import PySimpleGUI as sg
 import socket
-
-from excelreader import ReadExcel
+from see_excel import ReadExcel
 
 class Req():
     #max weekly hours
@@ -97,7 +96,13 @@ class Req():
         d0 = Req.strtodt(date1)
         d1 = Req.strtodt(date2)
         delta = d1 - d0
-        return(delta.days)   
+        return(delta.days)  
+     
+    def listdatediff(date1,date2):
+        d0 = Req.listtodt(date1)
+        d1 = Req.listtodt(date2)
+        delta = d1 - d0
+        return(delta.days)  
     
     def find_workinghours(time1, time2):
         t1 = dt.datetime.strptime(time1,"%Y-%m-%d %H:%M:%S")
@@ -204,22 +209,23 @@ class Req():
         return num
     
     def validateweeklyhours(wh):
-        if wh > ReadExcel.total_weekly_hour_limit:
-            sg.Popup('Oops!', 'Maximum of ' + str(ReadExcel.total_weekly_hour_limit) + ' total hours exceeded')
-            quit()
-        return wh
+        if wh > ReadExcel.total_weekly_hour_limit():
+            limit = ReadExcel.total_weekly_hour_limit()
+            sg.Popup('Oops!', 'Maximum of ' + str(int(limit)) + ' total hours exceeded')
+            return False
 
     def validateworkinghours(th):
-        if th > ReadExcel.total_work_hours_limit:
-            sg.Popup('Oops!', 'Maximum of ' + str(59) + ' working hours exceeded')
-            quit()
-        return th
+        if th > ReadExcel.total_work_hours_limit():
+            limit = ReadExcel.total_work_hours_limit()
+            sg.Popup('Oops!', 'Maximum of ' + str(int(limit)) + ' working hours exceeded')
+            return False
 
-    def validatedatediff(date1, date2):
-        if Req.datediff(date1, date2) > ReadExcel.total_date_range_limit:
-            sg.Popup('Oops!', 'Date range of ' + str(59) + ' exceeded')
-            quit()
-        return Req.datediff(date1, date2)    
+
+    def validatedatediff(diff):
+        if diff > ReadExcel.total_date_range_limit():
+            limit = ReadExcel.total_date_range_limit()
+            sg.Popup('Oops!', 'Date range of ' + str(int(limit)) + ' exceeded')
+            return False  
 
     def validatedate(date):
         dt.datetime(year=date[0], month=date[1], day=date[2])

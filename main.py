@@ -2,7 +2,7 @@ import exceledit
 import pandas as pd
 import datetime as dt
 import numpy
-from excelreader import ReadExcel
+from see_excel import ReadExcel
 from calculation import Req
 import glob
 
@@ -46,6 +46,8 @@ class Temp():
     numofdates = len(genstart1d1) + len(genstart1d2)
 
     dates = []
+    working_hours = []
+    temp = []
 
     ddf1 = pd.DataFrame({
                 'Total Days': [Req.datediff(starttime, endtime)],
@@ -60,7 +62,9 @@ class Temp():
                 columns = ['Date','Day','Office Start', 'Lunch Start', 'Lunch End', 'Office End','Working Hours']
                 )
     
-    gd2 = pd.DataFrame(index =  ['Date and Time'])
+    gd2 = pd.DataFrame(
+        columns = ['Weeks', 'Date Range', 'Total Working Hours']
+        )
     
     #compile dates(not needed)
     #for x in range(int(numofdates/4)):
@@ -71,6 +75,7 @@ class Temp():
 
     def compile(num,start,lunch1,lunch2,end):
         list=[]
+        
         list.append(Req.getdate(start[num]))
         list.append(Req.dayinweek(Req.strdatetodt(Req.getdate(start[num]))))
         list.append(Req.gethourminute(start[num]))
@@ -81,6 +86,7 @@ class Temp():
         lunch = Req.find_workinghours(lunch1[num],lunch2[num])
         list.append(total-lunch)
         Temp.dates.append(list)
+        Temp.temp.append(total - lunch)
     
 
     def main():
@@ -91,22 +97,48 @@ class Temp():
             #Temp.gd2.loc[len(Temp.gd2)] = Temp.dates[x]
         #exceledit.EditExcel.specinsert(Temp.gd2,'Tab', False, 5, 0)
         #print (Temp.genstart1d1)
+
         for x in range(len(Temp.genstart1d1) - 1):
             Temp.compile(x, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1)
             Temp.compile(x, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2)
+            list = []
+            list.append(Temp.temp[0])
+            list.append(Temp.temp[1])
+            Temp.working_hours.append(Temp.temp)
+            Temp.temp = []
 
-        for x in range(len(Temp.dates)):
+        #validate weekly
+        for num in range(0, len(Temp.working_hours)):
+            if Req.validateweeklyhours(Temp.working_hours[num][0] + Temp.working_hours[num][1]) == False:
+                quit()
+        
+        #validate total
+        tally = 0
+        for num2 in range(0, len(Temp.working_hours)):
+            tally = tally + Temp.working_hours[num2][0] + Temp.working_hours[num2][1]
+        if Req.validateworkinghours(tally) ==  False:
+            quit()
+        
+        #validate date range
+        if Req.validatedatediff(Req.listdatediff(Temp.startdate, Temp.enddate)) == False:
+            quit()
+
+
+        datediff = Req.listdatediff(Temp.startdate, Temp.enddate)
+        
+        weeks = Req.calcweeks(int(datediff))
+
+
+        for x in range(0, len(Temp.dates)):
             Temp.gd.loc[len(Temp.gd)] = Temp.dates[x]
-        #print (Temp.dates)
-        #print(Temp.dates)
 
-        #print(Temp.dates[0][6])
-
+        gd2data = [weeks, datediff, tally]
+        
+        Temp.gd2.loc[len(Temp.gd2)] = gd2data
+        exceledit.EditExcel.specinsert(Temp.gd2,'Tab', False, 0, 14)
         exceledit.EditExcel.specinsert(Temp.gd,'Tab', False, 0, 0)
         exceledit.EditExcel.writer.save() 
         #Temp.comp_gendates(Temp.genstart, Temp.genlunch1, Temp.genlunch2, Temp.genend)
         return
  
 Temp.main()
-
-#print (Temp.genstart1d1)

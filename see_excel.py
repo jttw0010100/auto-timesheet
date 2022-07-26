@@ -2,7 +2,6 @@ from calendar import day_abbr
 import pandas as pd
 import openpyxl
 import xlrd
-from calculation import Req
 
 loc = ("datainput.xls")
  
@@ -16,12 +15,17 @@ class ReadExcel():
         sheet = wb.sheet_by_index(sheetnum)
         return sheet.cell_value(row, column)
 
+    def datecomp(year, month, day):
+        date = [year, month, day]
+        return date
+
     def compile_dates(sheetnum, yearrow, monthrow, dayrow):
         sheet = wb.sheet_by_index(sheetnum)
         year = sheet.cell_value(yearrow, 1)
         month = sheet.cell_value(monthrow, 1)
         day =  sheet.cell_value(dayrow, 1)
-        return Req.datecomp(int(year), int(month), int(day))
+        return ReadExcel.datecomp(int(year), int(month), int(day))
+
     def find_start():
         return ReadExcel.compile_dates(0, 1, 2, 3)
     
