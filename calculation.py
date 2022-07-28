@@ -134,6 +134,9 @@ class Req():
 
     def listtodt(date):
         return dt.datetime(int(date[0]), int(date[1]), int(date[2]))
+    
+    def listtostrdate(date):
+        return str(date[0]) + "-" + str(date[1])+ "-" + str(date[2])
 
     def listtostr(date):
         return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]),"%Y-%m-%d")
@@ -250,8 +253,16 @@ class Req():
             sg.Popup('Oops!', 'Date range of ' + str(int(limit)) + ' exceeded')
             return False  
 
-    def validatedate(date):
-        dt.datetime(year=date[0], month=date[1], day=date[2])
+    def validatedate(inputdate):
+        year, month, day = inputdate.split('-')
+        try:
+            dt.datetime(int(year), int(month), int(day))
+        except ValueError:
+            return False
+        return True
+    
+    #def validatedate(date):
+       #dt.datetime(year=date[0], month=date[1], day=date[2])
 
     def test():
         #Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20], "7D")
