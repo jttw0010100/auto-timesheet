@@ -86,14 +86,13 @@ class Temp():
     temp = []
     
     gd = pd.DataFrame(
-                columns = ['Date','Day','Office Start', 'Lunch Start', 'Lunch End', 'Office End','Working Hours']
+                columns = ['Date','Day','Office Start', 'Lunch Start', 'Lunch End', 'Office End','Hours']
                 )
     
     gd2 = pd.DataFrame(
-        columns = ['Weeks', 'Date Range', 'Total Working Hours']
+        columns = ['Weeks', 'Date Range', 'Total Hours', 'FEO limit hours']
         )
     #enddate - startdate/7 * 15
-    #'FEO limit hours'
 
     #compile dates(not needed)
     #for x in range(int(numofdates/4)):
@@ -150,14 +149,18 @@ class Temp():
 
         for x in range(0, len(Temp.dates)):
             Temp.gd.loc[len(Temp.gd)] = Temp.dates[x]       
+        
+        if tally < ReadExcel.desired_work_hours_limit():
+            leftover = ReadExcel.desired_work_hours_limit() - tally
+        
+        print(type(ReadExcel.desired_work_hours_limit()))
 
-        gd2data = [weeks, datediff, tally]
+        gd2data = [weeks, datediff, tally, ReadExcel.total_work_hours_limit()]
         
         Temp.gd2.loc[len(Temp.gd2)] = gd2data
-        exceledit.EditExcel.specinsert(Temp.gd2,'Tab', False, 8, 0)
-        exceledit.EditExcel.specinsert(Temp.gd,'Tab', False, 0, 0)
+        exceledit.EditExcel.specinsert(Temp.gd2,'Results', False, 8, 0)
+        exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)
+        exceledit.EditExcel.setupresult()
         exceledit.EditExcel.writer.save() 
-        #Temp.comp_gendates(Temp.genstart, Temp.genlunch1, Temp.genlunch2, Temp.genend)
-        return
  
 Temp.main()

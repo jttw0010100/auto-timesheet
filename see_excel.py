@@ -34,6 +34,9 @@ class ReadExcel():
     
     def total_work_hours_limit():
         return ReadExcel.get_value(0, 11, 1)
+    
+    def desired_work_hours_limit():
+        return ReadExcel.get_value(0, 12, 1)
 
     def total_date_range_limit():
         return ReadExcel.get_value(0, 13, 1)

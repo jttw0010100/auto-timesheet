@@ -158,6 +158,12 @@ class Req():
     
     def addtimetodate(date, hour, minute):
         return dt.date.strftime(dt.datetime(date[0], date[1], date[2], hour, minute), "%Y-%m-%d %H:%M")
+
+    def addtime(date, timetoadd):
+        date2 = dt.datetime.strptime(date, "%Y-%m-%d %H:%M")
+        timetoadd2 = timetoadd*60
+        date3 = date2+dt.timedelta(minutes = timetoadd2)
+        return str(date3)
     
     def gethourminute(time):
         txt = time
@@ -234,6 +240,7 @@ class Req():
 
     def test():
         #Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20], "7D")
+        #Req.addtime("2022-07-01 12:00", 2.75)
         return
 
 Req.test()
