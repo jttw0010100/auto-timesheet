@@ -15,6 +15,7 @@ class Temp():
     startdate = ReadExcel.find_start()
     enddate = ReadExcel.find_end()
     days = []
+    publicholidays = []
     days = Req.generate2(Req.datelisttostr(startdate), enddate, "1D")
 
     dayofweek1 = ReadExcel.dayofweek1()
@@ -31,6 +32,7 @@ class Temp():
                 if (dayofweek in Days_in_week):
                     Days_in_week.remove(dayofweek)
                     blacklist.append(dayofweek)
+                    publicholidays.append(day)
                 if dayofweek1 == dayofweek or dayofweek2 == dayofweek:
                     invalid = invalid + 1
     
@@ -43,7 +45,7 @@ class Temp():
                 invalid = 0
     
     if invalid > 0:
-        sg.Popup('The days in week you have chosen land on a public holiday. Please choose days from this list:', Days_in_week)
+        sg.Popup('The days in week you have chosen land on a public holiday. Please choose days from this list:', Days_in_week, "These days are public holidays: ", publicholidays)
         quit()
 
 
@@ -99,7 +101,7 @@ class Temp():
         #dates.append(genstart3[x])
         #dates.append(genlunch1[x])
         #dates.append(genlunch2[x])
-        #dates.append(genend[x])
+        #dates.append(genend[x]
 
     def compile(num,start,lunch1,lunch2,end):
         list=[]
@@ -139,7 +141,8 @@ class Temp():
             tally = tally + Temp.working_hours[num2][0] + Temp.working_hours[num2][1]
         if Req.validateworkinghours(tally) ==  False:
             quit()
-        
+
+        tally2 = tally
         #validate date range
         if Req.validatedatediff(Req.listdatediff(Temp.startdate, Temp.enddate)) == False:
             quit()
@@ -147,30 +150,35 @@ class Temp():
         datediff = Req.listdatediff(Temp.startdate, Temp.enddate)  
         weeks = Req.calcweeks(int(datediff))
 
+        within = False
+        while within == False:
+            if ReadExcel.desired_work_hours_limit() < tally:
+                return
+            if ReadExcel.desired_work_hours_limit() >= tally:
+                within = True
+
         if float(tally) < ReadExcel.desired_work_hours_limit():
             leftover = ReadExcel.desired_work_hours_limit() - tally
             lastday = Temp.days[-1]
             lefthour = int(leftover)
             leftovermin = lefthour * 60 - leftover * 60
+            if Req.dayinweek(Req.strdatetodt(lastday)) == "Sunday":
+                lastday = Temp.days[-2]
             if leftover <= 4:
                 lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(9 + lefthour, leftovermin), leftover]
                 Temp.dates.append(lastdaylist)
-            else:
+            if weeks*15 < ReadExcel.desired_work_hours_limit()-8:
+                sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
+                quit()
+            if leftover > 4:
                 lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "13:00:00", "14:00:00", Req.timetostr(9 + lefthour + 1, leftovermin), leftover]
                 Temp.dates.append(lastdaylist)
-            if weeks*15 + 8 < ReadExcel.desired_work_hours_limit():
-                sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
-                quit()
-            if weeks*15 + 8 < ReadExcel.desired_work_hours_limit():
-                sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
-                quit()
 
-        
         for x in range(0, len(Temp.dates)):
             Temp.gd.loc[len(Temp.gd)] = Temp.dates[x]  
 
         gd2data = [weeks, datediff, tally, ReadExcel.total_work_hours_limit()]
-        
+
         Temp.gd2.loc[len(Temp.gd2)] = gd2data
         exceledit.EditExcel.specinsert(Temp.gd2,'Results', False, 8, 0)
         exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)

@@ -108,10 +108,6 @@ class Req():
         return (int(delta.total_seconds()/60/60))
 
     def calcweeks(days):
-        if days%7 > 0:
-            weeks = days//7 + 1
-            return(weeks)
-        if days%7 == 0:
             weeks = days/7
             return(weeks)
 
@@ -250,7 +246,7 @@ class Req():
     def validatedatediff(diff):
         if diff > ReadExcel.total_date_range_limit():
             limit = ReadExcel.total_date_range_limit()
-            sg.Popup('Oops!', 'Date range of ' + str(int(limit)) + ' exceeded')
+            sg.Popup('Oops!', 'Date range of ' + str(int(limit)) + ' days exceeded')
             return False  
 
     def validatedate(inputdate):
