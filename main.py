@@ -10,7 +10,7 @@ import glob
 
 class Temp():
     
-    Statutory_Holidays = ['2022-01-01','2022-02-01','2022-02-02','2022-02-03','2022-04-05','2022-05-01','2022-05-08','2022-06-03','2022-07-01','2022-09-12','2022-10-01','2022-10-04','2022-12-22','2022-12-25'] 
+    Statutory_Holidays = ReadExcel.get_public_holidays()
     Days_in_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     startdate = ReadExcel.find_start()
     enddate = ReadExcel.find_end()
@@ -147,13 +147,24 @@ class Temp():
         datediff = Req.listdatediff(Temp.startdate, Temp.enddate)  
         weeks = Req.calcweeks(int(datediff))
 
-        for x in range(0, len(Temp.dates)):
-            Temp.gd.loc[len(Temp.gd)] = Temp.dates[x]       
-        
-        if tally < ReadExcel.desired_work_hours_limit():
+        if float(tally) < ReadExcel.desired_work_hours_limit():
             leftover = ReadExcel.desired_work_hours_limit() - tally
+            lastday = Temp.days[-1]
+            lefthour = int(leftover)
+            leftovermin = lefthour * 60 - leftover * 60
+            if leftover <= 4:
+                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(9 + lefthour, leftovermin), leftover]
+                Temp.dates.append(lastdaylist)
+            else:
+                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "13:00:00", "14:00:00", Req.timetostr(9 + lefthour + 1, leftovermin), leftover]
+                Temp.dates.append(lastdaylist)
+            if leftover + 8 < ReadExcel.desired_work_hours_limit():
+                sg.Popup('Oops!', 'desired hours is not valid within dates chosen.')
+                quit()
+
         
-        print(type(ReadExcel.desired_work_hours_limit()))
+        for x in range(0, len(Temp.dates)):
+            Temp.gd.loc[len(Temp.gd)] = Temp.dates[x]  
 
         gd2data = [weeks, datediff, tally, ReadExcel.total_work_hours_limit()]
         

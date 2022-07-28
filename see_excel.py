@@ -9,7 +9,7 @@ wb = xlrd.open_workbook(loc)
 sheet = wb.sheet_by_index(0)
 
 class ReadExcel():
-    Statutory_Holidays = ['2022-01-01','2022-02-01','2022-02-02','2022-02-03','2022-04-05','2022-05-01','2022-05-08','2022-06-03','2022-07-01','2022-09-12','2022-10-01','2022-10-04','2022-12-22','2022-12-25'] 
+    
 
     def get_value(sheetnum, row, column):
         sheet = wb.sheet_by_index(sheetnum)
@@ -61,4 +61,29 @@ class ReadExcel():
     
     def dayofweek2():
         return str(ReadExcel.get_value(0, 22, 1))
+    
+    def get_public_holidays():
+        list = []
+        for i in range(12):
+            year = ReadExcel.get_value(1, 1, 1)
+            month = ReadExcel.get_value(1, i+1, 2)
+            day = ReadExcel.get_value(1, i+1, 3)
+            year = int(year)
+            year = str(year)
+            month = int(month)
+            if month<10:
+                month = str(month)
+                month = "0" + month
+            else:
+                month = str(month)
+            day = int(day)
+            if day<10:
+                day = str(day)
+                day = "0" + day
+            else:
+                day = str(day)
+            date = year + "-" + month + "-" + day
+            list.append(date)
+        return (list)
 
+ReadExcel.get_public_holidays()

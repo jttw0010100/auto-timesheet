@@ -15,8 +15,6 @@ import socket
 from see_excel import ReadExcel
 
 class Req():    
-    Statutory_Holidays = ['2022-01-01','2022-02-01','2022-02-02','2022-02-03','2022-04-05','2022-05-01','2022-05-08','2022-06-03','2022-07-01','2022-09-12','2022-10-01','2022-10-04','2022-12-22','2022-12-25'] 
-
 
     #time function
     def calcwh(start, lunchstart, lunchfinish, finish):
@@ -149,6 +147,22 @@ class Req():
     def strdatetodt(date):
         return dt.datetime.strptime(date,"%Y-%m-%d")    
 
+    def strdatetostr(date,hour, minute):
+        if hour<10:
+            hour= "0"+ str(int(hour))
+        if minute<10:
+            minute = "0"+str(int(minute))
+        date = date + " " + str(hour) + ":" + str(minute)
+        return (date)
+    
+    def timetostr(hour, minute):
+        if hour<10:
+            hour= "0"+ str(int(hour))
+        if minute<10:
+            minute = "0"+str(int(minute))
+        date = str(hour) + ":" + str(minute) + ":00"
+        return (date)
+
     def datelisttostr(date):
         return dt.datetime.strftime(dt.datetime(date[0], date[1], date[2]), "%Y-%m-%d")
 
@@ -227,7 +241,8 @@ class Req():
             limit = ReadExcel.total_work_hours_limit()
             sg.Popup('Oops!', 'Maximum of ' + str(int(limit)) + ' working hours exceeded')
             return False
-
+        if ReadExcel.total_weekly_hour_limit()>126:
+            sg.Popup('Oops!', 'FEO maximum total hours is 126 hours')
 
     def validatedatediff(diff):
         if diff > ReadExcel.total_date_range_limit():
@@ -241,6 +256,7 @@ class Req():
     def test():
         #Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20], "7D")
         #Req.addtime("2022-07-01 12:00", 2.75)
+        #Req.strdatetostr('2022-01-01', 10, 2)
         return
 
 Req.test()
