@@ -14,13 +14,6 @@ class Temp():
     Days_in_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     startdate = ReadExcel.find_start()
     enddate = ReadExcel.find_end()
-
-    if Req.validatedate(Req.listtostrdate(startdate)) == False:
-        sg.Popup('Oops!', 'Entered date start date ' + Req.listtostrdate(startdate) + 'does not exist')
-
-    if Req.validatedate(Req.listtostrdate(enddate)) == False:
-        sg.Popup('Oops!', 'Entered date end date ' + Req.listtostrdate(enddate) + ' does not exist')   
-     
     days = []
     days = Req.generate2(Req.datelisttostr(startdate), enddate, "1D")
 
@@ -165,6 +158,9 @@ class Temp():
             else:
                 lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "13:00:00", "14:00:00", Req.timetostr(9 + lefthour + 1, leftovermin), leftover]
                 Temp.dates.append(lastdaylist)
+            if weeks*15 + 8 < ReadExcel.desired_work_hours_limit():
+                sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
+                quit()
             if weeks*15 + 8 < ReadExcel.desired_work_hours_limit():
                 sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
                 quit()

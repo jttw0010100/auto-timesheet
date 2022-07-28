@@ -263,11 +263,3 @@ class Req():
     
     #def validatedate(date):
        #dt.datetime(year=date[0], month=date[1], day=date[2])
-
-    def test():
-        #Req.generate(Req.findday("2022-7-21 00:00","Sun"), [2022,8,20], "7D")
-        #Req.addtime("2022-07-01 12:00", 2.75)
-        #Req.strdatetostr('2022-01-01', 10, 2)
-        return
-
-Req.test()

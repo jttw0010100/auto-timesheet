@@ -86,4 +86,3 @@ class ReadExcel():
             list.append(date)
         return (list)
 
-ReadExcel.get_public_holidays()
