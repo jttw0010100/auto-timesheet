@@ -16,6 +16,7 @@ class Temp():
     enddate = ReadExcel.find_end()
     days = []
     publicholidays = []
+    leftover = 0
     days = Req.generate2(Req.datelisttostr(startdate), enddate, "1D")
 
     dayofweek1 = ReadExcel.dayofweek1()
@@ -31,6 +32,7 @@ class Temp():
                 dayofweek = Req.dayinweek(Req.strdatetodt(day))
                 if (dayofweek in Days_in_week):
                     Days_in_week.remove(dayofweek)
+                    days.remove(holiday)
                     blacklist.append(dayofweek)
                     publicholidays.append(day)
                 if dayofweek1 == dayofweek or dayofweek2 == dayofweek:
@@ -115,20 +117,62 @@ class Temp():
         total = Req.find_workinghours(start[num],end[num])
         lunch = Req.find_workinghours(lunch1[num],lunch2[num])
         list.append(total-lunch)
-        Temp.dates.append(list)
-        Temp.temp.append(total - lunch)
+        return list
     
+    def findwh(num, start, lunch1, lunch2, end):
+        total = Req.find_workinghours(start[num],end[num])
+        lunch = Req.find_workinghours(lunch1[num],lunch2[num])
+        return total - lunch
+    
+    def findremainder(desiredhours, weeklyhourlimit, hoursinweek):
+        list = []
+        remainder = desiredhours % weeklyhourlimit
+        if remainder>8:
+            list.append(8)
+            list.append(remainder-8)
+            Temp.leftover = remainder-8
+            return list
+        else: 
+            list.append(remainder)
+            Temp.leftover = remainder
+            list.append(0)
+            return list
 
     def main():
-
-        for x in range(len(Temp.genstart1d1) - 1):
-            Temp.compile(x, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1)
-            Temp.compile(x, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2)
+        working_hours1 = 0
+        within = False
+        count = 0
+        while (within == False):
             list = []
-            list.append(Temp.temp[0])
-            list.append(Temp.temp[1])
-            Temp.working_hours.append(Temp.temp)
-            Temp.temp = []
+
+            list.append(Temp.findwh(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
+
+            if working_hours1 + list[0] >= ReadExcel.desired_work_hours_limit():
+                within = True
+                Temp.working_hours.append(Temp.findremainder(ReadExcel.desired_work_hours_limit(), ReadExcel.total_weekly_hour_limit(), 0))
+                break
+
+            if working_hours1 + list[0] < ReadExcel.desired_work_hours_limit():
+                Temp.dates.append(Temp.compile(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
+                working_hours1 = working_hours1 + list[0]
+
+            list.append(Temp.findwh(count, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2))
+
+            if working_hours1 + list[1] >= ReadExcel.desired_work_hours_limit():
+                within = True
+                Temp.working_hours.append(Temp.findremainder(ReadExcel.desired_work_hours_limit(), ReadExcel.total_weekly_hour_limit(), 8))
+                break
+
+            if working_hours1 + list[1] < ReadExcel.desired_work_hours_limit():
+                Temp.dates.append(Temp.compile(count, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2))
+                working_hours1 = working_hours1 + list[1]
+
+            else:
+                within = True
+
+            count = count + 1
+            Temp.working_hours.append(list)
+            
 
         #validate weekly
         for num in range(0, len(Temp.working_hours)):
@@ -150,28 +194,32 @@ class Temp():
         datediff = Req.listdatediff(Temp.startdate, Temp.enddate)  
         weeks = Req.calcweeks(int(datediff))
 
+        '''
         within = False
+        currenthours = tally
         while within == False:
             if ReadExcel.desired_work_hours_limit() < tally:
-                return
+                extra = tally - ReadExcel.desired_work_hours_limit()
+                if (currenthours - Temp.dates[-1][6]) > ReadExcel.desired_work_hours_limit():
+                    within = False
+                
             if ReadExcel.desired_work_hours_limit() >= tally:
                 within = True
-
-        if float(tally) < ReadExcel.desired_work_hours_limit():
-            leftover = ReadExcel.desired_work_hours_limit() - tally
+        '''
+        if Temp.leftover >= 2:
             lastday = Temp.days[-1]
-            lefthour = int(leftover)
-            leftovermin = lefthour * 60 - leftover * 60
+            lefthour = int(Temp.leftover)
+            leftovermin = Temp.leftover * 60 - lefthour * 60
             if Req.dayinweek(Req.strdatetodt(lastday)) == "Sunday":
-                lastday = Temp.days[-2]
-            if leftover <= 4:
-                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(9 + lefthour, leftovermin), leftover]
+                    lastday = Temp.days[-2]
+            if Temp.leftover <= 4:
+                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(9 + lefthour, leftovermin), Temp.leftover]
                 Temp.dates.append(lastdaylist)
             if weeks*15 < ReadExcel.desired_work_hours_limit()-8:
                 sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
                 quit()
-            if leftover > 4:
-                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "13:00:00", "14:00:00", Req.timetostr(9 + lefthour + 1, leftovermin), leftover]
+            if Temp.leftover > 4:
+                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "13:00:00", "14:00:00", Req.timetostr(9 + lefthour + 1, leftovermin), Temp.leftover]
                 Temp.dates.append(lastdaylist)
 
         for x in range(0, len(Temp.dates)):
