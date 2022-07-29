@@ -155,6 +155,8 @@ class Req():
         return (date)
     
     def timetostr(hour, minute):
+        hour = int(hour)
+        minute = int(minute)
         if hour<10:
             hour= "0"+ str(int(hour))
         if minute<10:
