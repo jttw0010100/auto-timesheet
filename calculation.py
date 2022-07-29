@@ -258,6 +258,3 @@ class Req():
         except ValueError:
             return False
         return True
-    
-    #def validatedate(date):
-       #dt.datetime(year=date[0], month=date[1], day=date[2])

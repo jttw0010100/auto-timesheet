@@ -37,8 +37,3 @@ class EditExcel():
     def replace(dataframe, col, old, val):
         dataframe[col] = dataframe[col].replace([old],[val])
 
-    def test():
-        EditExcel.insert(EditExcel.df3,'tab')
-        EditExcel.specinsert(EditExcel.df2,'tab', False, 1, 5)
-        EditExcel.writer.save()
-
