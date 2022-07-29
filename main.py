@@ -202,7 +202,6 @@ class Temp():
                 extra = tally - ReadExcel.desired_work_hours_limit()
                 if (currenthours - Temp.dates[-1][6]) > ReadExcel.desired_work_hours_limit():
                     within = False
-                
             if ReadExcel.desired_work_hours_limit() >= tally:
                 within = True
         '''
