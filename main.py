@@ -145,11 +145,11 @@ class Temp():
         count = 0
         datediff = Req.listdatediff(Temp.startdate, Temp.enddate)  
         weeks = Req.calcweeks(int(datediff))
-        if (weeks/7) * 15 < ReadExcel.desired_work_hours_limit()-8:
-            sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
+        print(weeks)
+        if weeks * 15 < ReadExcel.desired_work_hours_limit()-8:
+            sg.Popup('Oops!', 'Desired hours is not valid within dates chosen. Please choose under ',weeks * 15, "or under hours" )
         while (within == False):
             list = []
-
             list.append(Temp.findwh(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
 
             if working_hours1 + list[0] > ReadExcel.desired_work_hours_limit():
@@ -196,18 +196,6 @@ class Temp():
         if Req.validatedatediff(Req.listdatediff(Temp.startdate, Temp.enddate)) == False:
             quit()
 
-
-        '''
-        within = False
-        currenthours = tally
-        while within == False:
-            if ReadExcel.desired_work_hours_limit() < tally:
-                extra = tally - ReadExcel.desired_work_hours_limit()
-                if (currenthours - Temp.dates[-1][6]) > ReadExcel.desired_work_hours_limit():
-                    within = False
-            if ReadExcel.desired_work_hours_limit() >= tally:
-                within = True
-        '''
         if Temp.leftover >= 2:
             lastday = Temp.days[-1]
             lefthour = int(Temp.leftover)
@@ -233,7 +221,7 @@ class Temp():
         exceledit.EditExcel.specinsert(Temp.gd2,'Results', False, 8, 0)
         exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)
         exceledit.EditExcel.setupresult()
-        exceledit.EditExcel.writer.save()
-
+        exceledit.EditExcel.writer.save() 
+        os.startfile('result.xlsx')
  
 Temp.main()
