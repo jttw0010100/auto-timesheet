@@ -147,23 +147,23 @@ class Temp():
 
             list.append(Temp.findwh(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
 
-            if working_hours1 + list[0] >= ReadExcel.desired_work_hours_limit():
+            if working_hours1 + list[0] > ReadExcel.desired_work_hours_limit():
                 within = True
                 Temp.working_hours.append(Temp.findremainder(ReadExcel.desired_work_hours_limit(), ReadExcel.total_weekly_hour_limit(), 0))
                 break
 
-            if working_hours1 + list[0] < ReadExcel.desired_work_hours_limit():
+            if working_hours1 + list[0] <= ReadExcel.desired_work_hours_limit():
                 Temp.dates.append(Temp.compile(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
                 working_hours1 = working_hours1 + list[0]
 
             list.append(Temp.findwh(count, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2))
 
-            if working_hours1 + list[1] >= ReadExcel.desired_work_hours_limit():
+            if working_hours1 + list[1] > ReadExcel.desired_work_hours_limit():
                 within = True
                 Temp.working_hours.append(Temp.findremainder(ReadExcel.desired_work_hours_limit(), ReadExcel.total_weekly_hour_limit(), 8))
                 break
 
-            if working_hours1 + list[1] < ReadExcel.desired_work_hours_limit():
+            if working_hours1 + list[1] <= ReadExcel.desired_work_hours_limit():
                 Temp.dates.append(Temp.compile(count, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2))
                 working_hours1 = working_hours1 + list[1]
 
