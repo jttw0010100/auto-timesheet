@@ -86,3 +86,5 @@ class ReadExcel():
             list.append(date)
         return (list)
 
+    def get_duty():
+        return str(ReadExcel.get_value(0, 24, 1))

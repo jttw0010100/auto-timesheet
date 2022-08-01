@@ -91,11 +91,14 @@ class Temp():
     temp = []
     
     gd = pd.DataFrame(
-                columns = ['Date','Day','Office Start', 'Lunch Start', 'Lunch End', 'Office End','Hours']
+                columns = ['Date','Day','Office Start', 'Lunch Start', 'Lunch End', 'Office End','Hours', 'Duty']
                 )
     
     gd2 = pd.DataFrame(
         columns = ['Weeks', 'Date Range', 'Total Hours', 'FEO limit hours']
+        )
+    gd3 = pd.DataFrame(
+        index = ['Sum of total hours']
         )
     #enddate - startdate/7 * 15
 
@@ -161,7 +164,9 @@ class Temp():
                 break
 
             if working_hours1 + list[0] <= ReadExcel.desired_work_hours_limit():
-                Temp.dates.append(Temp.compile(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
+                list1 = Temp.compile(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1)
+                list1.append(ReadExcel.get_duty())
+                Temp.dates.append(list1)
                 working_hours1 = working_hours1 + list[0]
 
             if working_hours1 + list[1] > ReadExcel.desired_work_hours_limit():
@@ -170,7 +175,9 @@ class Temp():
                 break
 
             if working_hours1 + list[1] <= ReadExcel.desired_work_hours_limit():
-                Temp.dates.append(Temp.compile(count, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2))
+                list1 = Temp.compile(count, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2)
+                list1.append(ReadExcel.get_duty())
+                Temp.dates.append(list1)
                 working_hours1 = working_hours1 + list[1]
 
             else:
@@ -196,6 +203,32 @@ class Temp():
         if Req.validatedatediff(Req.listdatediff(Temp.startdate, Temp.enddate)) == False:
             quit()
 
+        lastday = Temp.days[-1]
+        lastdaycount = -1
+        if Temp.leftover < 2:
+            if Req.dayinweek(Req.strdatetodt(lastday)) == "Sunday":
+                    lastday = Temp.days[-2]
+                    lastdaycount = -2
+
+            taken = 2 - Temp.leftover        
+
+            secondlasthour = Temp.dates[lastdaycount][6] * 60
+            secondleftlasthour = secondlasthour - taken*60
+            Temp.dates[lastdaycount][6] = secondleftlasthour/60
+
+            lefthour = int(Temp.leftover)
+            leftovermin = Temp.leftover * 60 - lefthour * 60
+            secondlastend = Temp.dates[lastdaycount][5]
+            timetoremove = taken * 60
+            dttime = dt.datetime.strptime(secondlastend,"%H:%M:%S")
+            result = dttime - dt.timedelta(minutes = timetoremove)
+            result = str(result).split(' ')
+            Temp.dates[-1][5] = result[1]
+            lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(11,0), 2, ReadExcel.get_duty()]
+            Temp.dates.append(lastdaylist)
+
+
+
         if Temp.leftover >= 2:
             lastday = Temp.days[-1]
             lefthour = int(Temp.leftover)
@@ -203,13 +236,13 @@ class Temp():
             if Req.dayinweek(Req.strdatetodt(lastday)) == "Sunday":
                     lastday = Temp.days[-2]
             if Temp.leftover <= 4:
-                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(9 + lefthour, leftovermin), Temp.leftover]
+                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(9 + lefthour, leftovermin), Temp.leftover, ReadExcel.get_duty()]
                 Temp.dates.append(lastdaylist)
             if weeks*15 < ReadExcel.desired_work_hours_limit()-8:
                 sg.Popup('The entered desired hours exceeds the FEO hours limit. The desired hours should be under: ' + str(int(weeks * 15)) + ' hours')
                 quit()
             if Temp.leftover > 4:
-                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "13:00:00", "14:00:00", Req.timetostr(9 + lefthour + 1, leftovermin), Temp.leftover]
+                lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "13:00:00", "14:00:00", Req.timetostr(9 + lefthour + 1, leftovermin), Temp.leftover, ReadExcel.get_duty()]
                 Temp.dates.append(lastdaylist)
 
         for x in range(0, len(Temp.dates)):
@@ -218,7 +251,7 @@ class Temp():
         gd2data = [weeks, datediff, tally, ReadExcel.total_work_hours_limit()]
 
         Temp.gd2.loc[len(Temp.gd2)] = gd2data
-        exceledit.EditExcel.specinsert(Temp.gd2,'Results', False, 8, 0)
+        exceledit.EditExcel.specinsert(Temp.gd2,'Results', False, 9, 0)
         exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)
         exceledit.EditExcel.setupresult()
         exceledit.EditExcel.writer.save() 

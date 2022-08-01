@@ -189,6 +189,7 @@ class Req():
         time1 = time.split(":")
         time1[0] = int(time1[0])
         time1[1] = int(time1[1])
+        time1[2] = int(time1[2])
         return(time1)
 
     def generate(startdate, enddate, frequency):
