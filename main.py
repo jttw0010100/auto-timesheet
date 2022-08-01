@@ -7,6 +7,7 @@ from calculation import Req
 import PySimpleGUI as sg
 import socket
 import glob
+import os
 
 class Temp():
     
@@ -142,6 +143,10 @@ class Temp():
         working_hours1 = 0
         within = False
         count = 0
+        datediff = Req.listdatediff(Temp.startdate, Temp.enddate)  
+        weeks = Req.calcweeks(int(datediff))
+        if (weeks/7) * 15 < ReadExcel.desired_work_hours_limit()-8:
+            sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
         while (within == False):
             list = []
 
@@ -191,8 +196,6 @@ class Temp():
         if Req.validatedatediff(Req.listdatediff(Temp.startdate, Temp.enddate)) == False:
             quit()
 
-        datediff = Req.listdatediff(Temp.startdate, Temp.enddate)  
-        weeks = Req.calcweeks(int(datediff))
 
         '''
         within = False
@@ -230,6 +233,7 @@ class Temp():
         exceledit.EditExcel.specinsert(Temp.gd2,'Results', False, 8, 0)
         exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)
         exceledit.EditExcel.setupresult()
-        exceledit.EditExcel.writer.save() 
+        exceledit.EditExcel.writer.save()
+
  
 Temp.main()
