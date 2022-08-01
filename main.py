@@ -7,6 +7,7 @@ from calculation import Req
 import PySimpleGUI as sg
 import socket
 import glob
+import os
 
 class Temp():
     
@@ -231,5 +232,6 @@ class Temp():
         exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)
         exceledit.EditExcel.setupresult()
         exceledit.EditExcel.writer.save() 
+        os.startfile('result.xlsx')
  
 Temp.main()
