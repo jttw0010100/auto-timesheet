@@ -10,8 +10,6 @@ import xlsxwriter
 workbook = xlsxwriter.Workbook("result.xlsx")
 worksheet1 = workbook.add_worksheet()
 
-
-
 class EditExcel():
     writer = pd.ExcelWriter("result.xlsx", engine='xlsxwriter')
     workbook = xlsxwriter.Workbook("result.xlsx")
