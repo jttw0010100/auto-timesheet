@@ -48,7 +48,7 @@ class Temp():
                 invalid = 0
     
     if invalid > 0:
-        sg.Popup('The days in week you have chosen land on a public holiday. Please choose days from this list:', Days_in_week, "These days are public holidays: ", publicholidays)
+        sg.Popup('The days in week you have chosen includes a public holiday. Public holidays: ', publicholidays, 'Please choose days from this list:', Days_in_week)
         quit()
 
 
@@ -145,13 +145,16 @@ class Temp():
         count = 0
         datediff = Req.listdatediff(Temp.startdate, Temp.enddate)  
         weeks = Req.calcweeks(int(datediff))
-        print(weeks)
-        if weeks * 15 < ReadExcel.desired_work_hours_limit()-8:
-            sg.Popup('Oops!', 'Desired hours is not valid within dates chosen. Please choose under ',weeks * 15, "or under hours" )
-        while (within == False):
-            list = []
-            list.append(Temp.findwh(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
 
+        if weeks * 15 < ReadExcel.desired_work_hours_limit():
+            sg.Popup('The entered desired hours exceeds the FEO hours limit. The desired hours should be under: ' + str(int(weeks * 15)) + ' hours')
+            quit()
+
+        list = []
+        list.append(Temp.findwh(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
+        list.append(Temp.findwh(count, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2))
+
+        while (within == False):
             if working_hours1 + list[0] > ReadExcel.desired_work_hours_limit():
                 within = True
                 Temp.working_hours.append(Temp.findremainder(ReadExcel.desired_work_hours_limit(), ReadExcel.total_weekly_hour_limit(), 0))
@@ -160,8 +163,6 @@ class Temp():
             if working_hours1 + list[0] <= ReadExcel.desired_work_hours_limit():
                 Temp.dates.append(Temp.compile(count, Temp.genstart1d1, Temp.genlunch1d1, Temp.genlunch2d1, Temp.genendd1))
                 working_hours1 = working_hours1 + list[0]
-
-            list.append(Temp.findwh(count, Temp.genstart1d2, Temp.genlunch1d2, Temp.genlunch2d2, Temp.genendd2))
 
             if working_hours1 + list[1] > ReadExcel.desired_work_hours_limit():
                 within = True
@@ -177,7 +178,6 @@ class Temp():
 
             count = count + 1
             Temp.working_hours.append(list)
-            
 
         #validate weekly
         for num in range(0, len(Temp.working_hours)):
@@ -206,7 +206,7 @@ class Temp():
                 lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(9 + lefthour, leftovermin), Temp.leftover]
                 Temp.dates.append(lastdaylist)
             if weeks*15 < ReadExcel.desired_work_hours_limit()-8:
-                sg.Popup('Oops!', 'Desired hours is not valid within dates chosen.')
+                sg.Popup('The entered desired hours exceeds the FEO hours limit. The desired hours should be under: ' + str(int(weeks * 15)) + ' hours')
                 quit()
             if Temp.leftover > 4:
                 lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "13:00:00", "14:00:00", Req.timetostr(9 + lefthour + 1, leftovermin), Temp.leftover]
@@ -222,6 +222,6 @@ class Temp():
         exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)
         exceledit.EditExcel.setupresult()
         exceledit.EditExcel.writer.save() 
-        os.startfile('result.xlsx')
+        #os.startfile('result.xlsx')
  
 Temp.main()

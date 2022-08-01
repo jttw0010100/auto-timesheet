@@ -100,11 +100,6 @@ class Req():
         t1 = dt.datetime.strptime(time1,"%Y-%m-%d %H:%M:%S")
         t2 = dt.datetime.strptime(time2,"%Y-%m-%d %H:%M:%S")
         delta = t2 - t1
-        """
-        print (t1)
-        print (t2)
-        print(delta)
-        """
         return (int(delta.total_seconds()/60/60))
 
     def calcweeks(days):
@@ -221,34 +216,34 @@ class Req():
     #time validation
     def validatehour(num):
         if num > 23:
-            sg.Popup('Oops!', str(num) + ' is not a valid time')
+            sg.Popup(str(num) + ' is not a valid time format')
             quit()
         return num
 
     def validateminutes(num):
         if num > 59:
-            sg.Popup('Oops!', str(num) + ' is not a valid time')
+            sg.Popup( str(num) + ' is not a valid time format')
             quit()
         return num
     
     def validateweeklyhours(wh):
         if wh > ReadExcel.total_weekly_hour_limit():
             limit = ReadExcel.total_weekly_hour_limit()
-            sg.Popup('Oops!', 'Maximum of ' + str(int(limit)) + ' total hours exceeded')
+            sg.Popup('Maximum of ' + str(int(limit)) + ' total weekly hours exceeded')
             return False
 
     def validateworkinghours(th):
         if th > ReadExcel.total_work_hours_limit():
             limit = ReadExcel.total_work_hours_limit()
-            sg.Popup('Oops!', 'Maximum of ' + str(int(limit)) + ' working hours exceeded')
+            sg.Popup('Maximum of ' + str(int(limit)) + ' total working hours exceeded')
             return False
         if ReadExcel.total_weekly_hour_limit()>126:
-            sg.Popup('Oops!', 'FEO maximum total hours is 126 hours')
+            sg.Popup('FEO maximum total hours is 126 hours')
 
     def validatedatediff(diff):
         if diff > ReadExcel.total_date_range_limit():
             limit = ReadExcel.total_date_range_limit()
-            sg.Popup('Oops!', 'Date range of ' + str(int(limit)) + ' days exceeded')
+            sg.Popup('Date range of ' + str(int(limit)) + ' days exceeded')
             return False  
 
     def validatedate(inputdate):
