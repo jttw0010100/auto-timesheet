@@ -10,8 +10,6 @@ import xlsxwriter
 workbook = xlsxwriter.Workbook("result.xlsx")
 worksheet1 = workbook.add_worksheet()
 
-worksheet1.set_column(0, 0, 100)
-
 
 
 class EditExcel():
