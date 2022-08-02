@@ -5,6 +5,9 @@ import numpy
 from see_excel import ReadExcel
 from calculation import Req
 import PySimpleGUI as sg
+from openpyxl.styles import Border, Side
+import openpyxl
+import xlsxwriter
 import socket
 import glob
 import os
@@ -98,8 +101,11 @@ class Temp():
         columns = ['Weeks', 'Date Range', 'Total Hours', 'FEO limit hours']
         )
     gd3 = pd.DataFrame(
-        index = ['Sum of total hours']
+        columns = ['Sum of total hours']
         )
+    gd4 = pd.DataFrame(
+        columns = ['Sum of total hours']
+    )
     #enddate - startdate/7 * 15
 
     #compile dates(not needed)
@@ -141,7 +147,7 @@ class Temp():
             Temp.leftover = remainder
             list.append(0)
             return list
-
+    
     def main():
         working_hours1 = 0
         within = False
@@ -250,11 +256,16 @@ class Temp():
 
         gd2data = [weeks, datediff, tally, ReadExcel.total_work_hours_limit()]
 
+        Temp.gd4.columns = [''] * len(Temp.gd4.columns)
+        Temp.gd4.loc[len(Temp.gd4)] = tally 
+
+        exceledit.EditExcel.specinsert(Temp.gd4,'Results', False, 6, len(Temp.dates))
         Temp.gd2.loc[len(Temp.gd2)] = gd2data
         exceledit.EditExcel.specinsert(Temp.gd2,'Results', False, 9, 0)
         exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)
+        exceledit.EditExcel.specinsert(Temp.gd3,'Results', False, 5, len(Temp.dates)+1)
         exceledit.EditExcel.setupresult()
-        exceledit.EditExcel.writer.save() 
+        exceledit.EditExcel.writer.save()
         #os.startfile('result.xlsx')
  
 Temp.main()
