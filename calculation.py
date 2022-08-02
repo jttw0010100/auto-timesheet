@@ -244,7 +244,7 @@ class Req():
     def validatedatediff(diff):
         if diff > ReadExcel.total_date_range_limit():
             limit = ReadExcel.total_date_range_limit()
-            sg.Popup('Date range of ' + str(int(limit)) + ' days exceeded')
+            sg.Popup('Date range of ' + str(int(limit)) + ' days exceeded. Currently at ' + str(int(diff)) + ' days')
             return False  
 
     def validatedate(inputdate):

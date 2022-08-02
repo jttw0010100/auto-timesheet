@@ -31,6 +31,9 @@ class EditExcel():
 
     def specinsert(dataframe,tab_name,tf,sc,sr):
         dataframe.to_excel(EditExcel.writer, sheet_name=tab_name, index = tf, startcol = sc, startrow = sr)
+    
+    def specinsert2(dataframe,tab_name,tf, head ,sc,sr):
+        dataframe.to_excel(EditExcel.writer, sheet_name=tab_name, index = tf, header = head,startcol = sc, startrow = sr)
         
     def replace(dataframe, col, old, val):
         dataframe[col] = dataframe[col].replace([old],[val])

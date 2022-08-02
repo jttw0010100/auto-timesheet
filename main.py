@@ -211,7 +211,7 @@ class Temp():
 
         lastday = Temp.days[-1]
         lastdaycount = -1
-        if Temp.leftover < 2:
+        if  0 < Temp.leftover < 2:
             if Req.dayinweek(Req.strdatetodt(lastday)) == "Sunday":
                     lastday = Temp.days[-2]
                     lastdaycount = -2
@@ -254,18 +254,18 @@ class Temp():
         for x in range(0, len(Temp.dates)):
             Temp.gd.loc[len(Temp.gd)] = Temp.dates[x]  
 
-        gd2data = [weeks, datediff, tally, ReadExcel.total_work_hours_limit()]
+        gd2data = [weeks, datediff, tally, int(weeks*15)]
 
         Temp.gd4.columns = [''] * len(Temp.gd4.columns)
         Temp.gd4.loc[len(Temp.gd4)] = tally 
 
-        exceledit.EditExcel.specinsert(Temp.gd4,'Results', False, 6, len(Temp.dates))
+        exceledit.EditExcel.specinsert2(Temp.gd4,'Results', False, False, 6, 17)
         Temp.gd2.loc[len(Temp.gd2)] = gd2data
         exceledit.EditExcel.specinsert(Temp.gd2,'Results', False, 9, 0)
         exceledit.EditExcel.specinsert(Temp.gd,'Results', False, 0, 0)
-        exceledit.EditExcel.specinsert(Temp.gd3,'Results', False, 5, len(Temp.dates)+1)
+        exceledit.EditExcel.specinsert(Temp.gd3,'Results',False, 5, 17)
         exceledit.EditExcel.setupresult()
         exceledit.EditExcel.writer.save()
         #os.startfile('result.xlsx')
- 
+
 Temp.main()
