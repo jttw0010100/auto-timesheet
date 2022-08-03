@@ -15,6 +15,7 @@ import os
 class Temp():
     
     Statutory_Holidays = ReadExcel.get_public_holidays()
+    print(Statutory_Holidays)
     Days_in_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     startdate = ReadExcel.find_start()
     enddate = ReadExcel.find_end()
@@ -35,11 +36,11 @@ class Temp():
         for holiday in Statutory_Holidays:
             if day == holiday:
                 invalid = 0
+                publicholidays.append(day)
+                days.remove(holiday)
                 if (dayofweek in Days_in_week):
                     Days_in_week.remove(dayofweek)
-                    days.remove(holiday)
                     blacklist.append(dayofweek)
-                    publicholidays.append(day)
         if dayofweek == "Sunday":
             days.remove(day)
     
