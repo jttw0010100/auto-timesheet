@@ -15,7 +15,6 @@ import os
 class Temp():
     
     Statutory_Holidays = ReadExcel.get_public_holidays()
-    print(Statutory_Holidays)
     Days_in_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     startdate = ReadExcel.find_start()
     enddate = ReadExcel.find_end()
@@ -42,6 +41,8 @@ class Temp():
                     Days_in_week.remove(dayofweek)
                     blacklist.append(dayofweek)
         if dayofweek == "Sunday":
+            days.remove(day)
+        if dayofweek == "Saturday":
             days.remove(day)
     
 
@@ -111,14 +112,6 @@ class Temp():
     gd4 = pd.DataFrame(
         columns = ['Sum of total hours']
     )
-    #enddate - startdate/7 * 15
-
-    #compile dates(not needed)
-    #for x in range(int(numofdates/4)):
-        #dates.append(genstart3[x])
-        #dates.append(genlunch1[x])
-        #dates.append(genlunch2[x])
-        #dates.append(genend[x]
 
     def compile(num,start,lunch1,lunch2,end):
         list=[]
