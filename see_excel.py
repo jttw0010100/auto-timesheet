@@ -3,71 +3,57 @@ import pandas as pd
 import openpyxl
 import xlrd
 
-loc = ("datainput.xlsx")
- 
-wb = xlrd.open_workbook(loc)
-sheet = wb.sheet_by_index(0)
+df = pd.read_excel(r"datainput.xlsx",'Input')
+df2 = pd.read_excel(r"datainput.xlsx",'Public Holidays')
 
 class ReadExcel():
-    
-
-    def get_value(sheetnum, row, column):
-        sheet = wb.sheet_by_index(sheetnum)
-        return sheet.cell_value(row, column)
 
     def datecomp(year, month, day):
         date = [year, month, day]
         return date
 
-    def compile_dates(sheetnum, yearrow, monthrow, dayrow):
-        sheet = wb.sheet_by_index(sheetnum)
-        year = sheet.cell_value(yearrow, 1)
-        month = sheet.cell_value(monthrow, 1)
-        day =  sheet.cell_value(dayrow, 1)
-        return ReadExcel.datecomp(int(year), int(month), int(day))
-
     def find_start():
-        return ReadExcel.compile_dates(0, 1, 2, 3)
+        return ReadExcel.datecomp(df.at[0, 'Unnamed: 1'], df.at[1, 'Unnamed: 1'], df.at[2, 'Unnamed: 1'])
     
     def find_end():
-        return ReadExcel.compile_dates(0, 6, 7, 8)
+        return ReadExcel.datecomp(df.at[5, 'Unnamed: 1'], df.at[6, 'Unnamed: 1'], df.at[7, 'Unnamed: 1'])
     
     def total_work_hours_limit():
-        return ReadExcel.get_value(0, 11, 1)
+        return df.at[10, 'Unnamed: 1']
     
     def desired_work_hours_limit():
-        return ReadExcel.get_value(0, 12, 1)
+        return df.at[11, 'Unnamed: 1']
 
     def total_date_range_limit():
-        return ReadExcel.get_value(0, 13, 1)
+        return df.at[12, 'Unnamed: 1']
 
     def total_weekly_hour_limit():
-        return ReadExcel.get_value(0, 14, 1)
+        return df.at[13, 'Unnamed: 1']
 
     def office_start():
-        return ReadExcel.get_value(0, 15, 1)
+        return df.at[14, 'Unnamed: 1']
 
     def lunch_start():
-        return ReadExcel.get_value(0, 16, 1)
+        return df.at[15, 'Unnamed: 1']
 
     def lunch_end():
-        return ReadExcel.get_value(0, 17, 1)
+        return df.at[16, 'Unnamed: 1']
     
     def office_end():
-        return ReadExcel.get_value(0, 18, 1)
+        return df.at[17, 'Unnamed: 1']
 
     def dayofweek1():
-        return str(ReadExcel.get_value(0, 21, 1))
+        return str(df.at[20, 'Unnamed: 1'])
     
     def dayofweek2():
-        return str(ReadExcel.get_value(0, 22, 1))
+        return str(df.at[21, 'Unnamed: 1'])
     
     def get_public_holidays():
         list = []
         for i in range(12):
-            year = ReadExcel.get_value(1, 1, 1)
-            month = ReadExcel.get_value(1, i+1, 2)
-            day = ReadExcel.get_value(1, i+1, 3)
+            year = df2.at[i, 'Year']
+            month = df2.at[i, 'Month']
+            day = df2.at[i, 'Day']
             year = int(year)
             year = str(year)
             month = int(month)
@@ -87,4 +73,4 @@ class ReadExcel():
         return (list)
 
     def get_duty():
-        return str(ReadExcel.get_value(0, 24, 1))
+        return str(df.at[23, 'Unnamed: 1'])
