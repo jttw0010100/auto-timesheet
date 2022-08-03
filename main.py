@@ -266,6 +266,6 @@ class Temp():
         exceledit.EditExcel.specinsert(Temp.gd3,'Results',False, 5, 17)
         exceledit.EditExcel.setupresult()
         exceledit.EditExcel.writer.save()
-        #os.startfile('result.xlsx')
+        os.startfile('result.xlsx')
 
 Temp.main()
