@@ -50,7 +50,7 @@ class ReadExcel():
     
     def get_public_holidays():
         list = []
-        for i in range(12):
+        for i in range(len(df2)):
             year = df2.at[i, 'Year']
             month = df2.at[i, 'Month']
             day = df2.at[i, 'Day']

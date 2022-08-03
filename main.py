@@ -22,6 +22,7 @@ class Temp():
     publicholidays = []
     leftover = 0
     days = Req.generate2(Req.datelisttostr(startdate), enddate, "1D")
+    days2 = Req.generate2(Req.datelisttostr(startdate), enddate, "1D")
 
     dayofweek1 = ReadExcel.dayofweek1()
     dayofweek2 = ReadExcel.dayofweek2()
@@ -29,7 +30,7 @@ class Temp():
     blacklist = []
 
     invalid = 0
-    for day in days:
+    for day in days2:
         for holiday in Statutory_Holidays:
             if day == holiday:
                 invalid = 0
@@ -41,7 +42,8 @@ class Temp():
                     publicholidays.append(day)
                 if dayofweek1 == dayofweek or dayofweek2 == dayofweek:
                     invalid = invalid + 1
-    
+    print(blacklist)
+
     if len(blacklist)>0:
         if dayofweek1 != blacklist[0] and dayofweek2 != blacklist[0]:
             if len(blacklist)>1:
