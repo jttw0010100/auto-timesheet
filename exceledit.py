@@ -23,8 +23,8 @@ class EditExcel():
         EditExcel.writer.sheets['Results'].set_column(5,5, 15)
         EditExcel.writer.sheets['Results'].set_column(6,6, 7)
         EditExcel.writer.sheets['Results'].set_column(9,9, 10)
-        EditExcel.writer.sheets['Results'].set_column(10,10, 9)
-        EditExcel.writer.sheets['Results'].set_column(11,12, 13)
+        EditExcel.writer.sheets['Results'].set_column(10,10, 11)
+        EditExcel.writer.sheets['Results'].set_column(11,12, 14)
 
     def insert(dataframe,tab_name):
         dataframe.to_excel(EditExcel.writer, sheet_name=tab_name)
