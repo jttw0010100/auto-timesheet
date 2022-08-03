@@ -40,19 +40,19 @@ class Temp():
                     days.remove(holiday)
                     blacklist.append(dayofweek)
                     publicholidays.append(day)
-                if dayofweek1 == dayofweek or dayofweek2 == dayofweek:
-                    invalid = invalid + 1
         if dayofweek == "Sunday":
             days.remove(day)
-            publicholidays.append(day)
+    
 
     if len(blacklist)>0:
-        if dayofweek1 != blacklist[0] and dayofweek2 != blacklist[0]:
-            if len(blacklist)>1:
-                if dayofweek1 != blacklist[1] and dayofweek2 != blacklist[1]:
-                    invalid = 0
-            if len(blacklist)<=1:
-                invalid = 0
+        for blacked in blacklist:
+            if dayofweek1 == blacked:
+                invalid = invalid + 1
+        for blacked in blacklist:
+            if dayofweek2 == blacked:
+                invalid = invalid + 1
+    if len(blacklist)<=1:
+        invalid = 0
     
     if invalid > 0:
         sg.Popup('The days in week you have chosen includes a public holiday. Public holidays: ', publicholidays, 'Please choose days from this list:', Days_in_week)
