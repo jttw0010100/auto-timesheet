@@ -31,10 +31,10 @@ class Temp():
 
     invalid = 0
     for day in days2:
+        dayofweek = Req.dayinweek(Req.strdatetodt(day))
         for holiday in Statutory_Holidays:
             if day == holiday:
                 invalid = 0
-                dayofweek = Req.dayinweek(Req.strdatetodt(day))
                 if (dayofweek in Days_in_week):
                     Days_in_week.remove(dayofweek)
                     days.remove(holiday)
@@ -42,7 +42,9 @@ class Temp():
                     publicholidays.append(day)
                 if dayofweek1 == dayofweek or dayofweek2 == dayofweek:
                     invalid = invalid + 1
-    print(blacklist)
+        if dayofweek == "Sunday":
+            days.remove(day)
+            publicholidays.append(day)
 
     if len(blacklist)>0:
         if dayofweek1 != blacklist[0] and dayofweek2 != blacklist[0]:
@@ -210,13 +212,26 @@ class Temp():
         #validate date range
         if Req.validatedatediff(Req.listdatediff(Temp.startdate, Temp.enddate)) == False:
             quit()
+        
+        for dates in Temp.dates:
+            for days in Temp.days:
+                if dates[0] == days:
+                    Temp.days.remove(dates[0])
+    
+        lastday = Temp.dates[-1][0]
+        lastdaystat = False
+        counter = -1
+        while lastdaystat == False:
+            if Temp.days[counter] not in Temp.dates:
+                lastday = Temp.days[counter]
+                lastdaystat = True
+                break
+            counter = counter - 1
 
-        lastday = Temp.days[-1]
         lastdaycount = -1
         if  0 < Temp.leftover < 2:
             if Req.dayinweek(Req.strdatetodt(lastday)) == "Sunday":
-                    lastday = Temp.days[-2]
-                    lastdaycount = -2
+                    lastdaycount = counter
 
             taken = 2 - Temp.leftover        
 
@@ -238,11 +253,8 @@ class Temp():
 
 
         if Temp.leftover >= 2:
-            lastday = Temp.days[-1]
             lefthour = int(Temp.leftover)
             leftovermin = Temp.leftover * 60 - lefthour * 60
-            if Req.dayinweek(Req.strdatetodt(lastday)) == "Sunday":
-                    lastday = Temp.days[-2]
             if Temp.leftover <= 4:
                 lastdaylist = [lastday,Req.dayinweek(Req.strdatetodt(lastday)),Req.timetostr(9, 0), "N/A", "N/A", Req.timetostr(9 + lefthour, leftovermin), Temp.leftover, ReadExcel.get_duty()]
                 Temp.dates.append(lastdaylist)
@@ -268,6 +280,6 @@ class Temp():
         exceledit.EditExcel.specinsert(Temp.gd3,'Results',False, 5, 17)
         exceledit.EditExcel.setupresult()
         exceledit.EditExcel.writer.save()
-        os.startfile('result.xlsx')
+        #os.startfile('result.xlsx')
 
 Temp.main()
